@@ -24,15 +24,14 @@ Features
 ----------------------
 
 In this folder the main source code in C for program can be found in file main.c.
-The code generated using the MPLAB Code Configurator (MCC) tool is  
-in a folder called mcc_generated_files. 
+The code generated using the MPLAB Code Configurator is in a folder called mcc_generated_files. 
 
 There is also an Oled library(OLED.c and OLED.h),
 and a font.h file that contains an ASCII pixelfont.
 
 The sensor code is also in a library(dht22.c and dht22.h)
 
-** Connections **
+**Connections**
 
 1. RC3 = DHT22 Sensor line,
 2. RC2 = Status LED, toggles every sensor refresh. 
@@ -55,6 +54,7 @@ Will also work on a  OLED 128 by 32 SSD1306, as well with one modification to li
 
 
 **DHT 22 sensor**
+
 Digital relative humidity & temperature sensorAM2302/DHT22.
 This 3 wire sensor provides Temperature and humidity data, 
 

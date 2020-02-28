@@ -1,5 +1,13 @@
 
 
+Table of contents
+---------------------------
+
+  * [Table of contents](#table-of-contents)
+  * [Overview](#overview)
+  * [Project List](#project-list)
+
+
 Overview
 --------------------------------------------
 * Name: pic_16F18346_projects
@@ -9,12 +17,7 @@ Overview
 * Mail: glyons66@hotmail.com
 * Copyright: (C) 2020 Gavin Lyons GNU GPL. see LICENSE.md in documentation section
 
-Table of contents
----------------------------
 
-  * [Overview](#overview)
-  * [Table of contents](#table-of-contents)
-  * [Project List](#project-list)
 
 Project List
 -----------------------------------------
@@ -29,7 +32,6 @@ Each Project is the relevant sub folder at url link. All code is written in C (x
 
 | Num | Desc | Link |
 | --- | --- | --- |
-| 1 |  Blink LED | [URL](projects/Blink) |
-| 2 |  DHT22 sensor data displayed on ssd1306 OLED | [URL](projects/oled_dht22) |
+| 1 |  DHT22 sensor data displayed on ssd1306 OLED | [URL](projects/oled_dht22) |
+| 2 |  ------- |--------- |
 | 3 |  ------- |--------- |
-| 4 |  ------- |--------- |
