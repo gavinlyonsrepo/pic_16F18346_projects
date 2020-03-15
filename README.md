@@ -1,12 +1,9 @@
-
-
 Table of contents
 ---------------------------
 
   * [Table of contents](#table-of-contents)
   * [Overview](#overview)
   * [Project List](#project-list)
-
 
 Overview
 --------------------------------------------
@@ -16,8 +13,6 @@ Overview
 * Author: Gavin Lyons 
 * Mail: glyons66@hotmail.com
 * Copyright: (C) 2020 Gavin Lyons GNU GPL. see LICENSE.md in documentation section
-
-
 
 Project List
 -----------------------------------------
@@ -33,5 +28,5 @@ Each Project is the relevant sub folder at url link. All code is written in C (x
 | Num | Desc | Link |
 | --- | --- | --- |
 | 1 |  DHT22 sensor data displayed on ssd1306 OLED | [URL](projects/oled_dht22) |
-| 2 |  ------- |--------- |
+| 2 |  DHT22 sensor + Seven Segment ASCII Library  | [URL](projects/7seg_dht22) |
 | 3 |  ------- |--------- |
