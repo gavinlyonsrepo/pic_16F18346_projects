@@ -28,5 +28,6 @@ Each Project is the relevant sub folder at url link. All code is written in C (x
 | Num | Desc | Link |
 | --- | --- | --- |
 | 1 |  DHT22 sensor data displayed on ssd1306 OLED | [URL](projects/oled_dht22) |
-| 2 |  DHT22 sensor + Seven Segment ASCII Library  | [URL](projects/7seg_dht22) |
-| 3 |  ------- |--------- |
+| 2 |  DHT22 sensor data displayed on Seven Segment (ASCII Library)  | [URL](projects/7seg_dht22) |
+| 3 |  Ds1307 Real time clock data displayed on LCD | [URL](projects/ds1307) |
+| 4 |  ------- |--------- |
