@@ -12,6 +12,7 @@
 */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
 #ifndef DS1307_H
@@ -63,6 +64,7 @@ char print_buffer[256] = {0};
 /************* Function prototypes *******************/
 void initClock(void);
 void readClock(void);
-void writeClock(void);
+void writeClockStart(void);
+void writeClock(char *str);
 
 #endif

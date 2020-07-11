@@ -68,7 +68,7 @@ void lcd_init (void)
     lcd_send_cmd (LCD_HOME);
     lcd_send_cmd (MODE_4BIT);
     lcd_send_cmd (DISPLAY_ON);
-    lcd_send_cmd (CURSOR_BLINK); 
+    //lcd_send_cmd (CURSOR_BLINK); 
     lcd_send_cmd (CLRSCR);
 }
 
