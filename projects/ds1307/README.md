@@ -29,10 +29,10 @@ Features
 In this folder the main source code in C (xc8) for program can be found in file main.c.
 The code generated using the MPLAB Code Configurator is in a folder called mcc_generated_files. 
 
-There is an LCD library(LCD.c and LCD.h), for controlling the HD44780-based 
+There is a LCD library(LCD.c and LCD.h), for controlling the HD44780-based 
 LCD 16x02 library I2C bus & PCF8574 interface.
 
-There is an Ds1307 RTC library(ds1307.c and ds1307.h)
+There is a Ds1307 RTC library(ds1307.c and ds1307.h)
 
 There is a keyboard library (Keypad.h and Keyboard.c). 4X4 keypad, This is used to
 enter information to change date and time , 
