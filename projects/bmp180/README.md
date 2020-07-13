@@ -4,8 +4,7 @@ Overview
 --------------------------------------------
 * Name: BMP180
 * Description: Display BMP180 barometric pressure sensor data on a
-  HD44780-based LCD 16x02 I2C bus & PCF8574 interface, 
-  keyboard entry to set date/time
+  HD44780-based LCD 16x02 I2C bus & PCF8574 interface, e
 * Author: Gavin Lyons.
 * Complier: xc8 v2.1.0
 * Foundation services library: 0.2.0 (I2C)
