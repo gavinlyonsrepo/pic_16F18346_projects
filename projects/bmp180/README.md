@@ -19,7 +19,7 @@ Table of contents
   * [Overview](#overview)
   * [Features](#features)
   * [Output](#output)
- 
+  * [Schematic](#schematic)
   
 Features
 ----------------------
@@ -28,7 +28,7 @@ In this folder the main source code in C (xc8) for program can be found in file 
 The code generated using the MPLAB Code Configurator is in a folder called mcc_generated_files. 
 There is a LCD library(LCD.c and LCD.h), for controlling the HD44780-based 
 LCD 16x02 library I2C bus & PCF8574 interface.
-There is a BMP180 library(ds1307.c and ds1307.h)
+There is a BMP180 library(BMP180.x)
 
 
 **Connections**
@@ -67,6 +67,12 @@ Output
 -----------------------
 
 Pressure output shown in pascals, the library can also calculate pressure by removing effects of 
-altitude using sea level pressure and altitude itself for a given pressure. Also Temperature.
+altitude using sea level pressure and altitude itself for a given pressure. Also Temperature sensor included. 
 
 ![ output ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/bmp180.jpg)
+
+
+Schematic
+------------------------
+
+![ schematic ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/bmp180sch.jpg)

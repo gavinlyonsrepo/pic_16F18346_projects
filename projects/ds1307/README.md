@@ -21,7 +21,6 @@ Table of contents
   * [Features](#features)
   * [Output](#output)
   * [Schematic](#schematic)
-  * [TODO](#todo)
   
 Features
 ----------------------
@@ -111,10 +110,3 @@ Schematic
 
 ![ schematic ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/ds1307sch.jpg)
 
-
-TODO
-------------------------
-
-1.  Error handling function to handle empty battery and no connection to RTC.
-2.  Error handling to check for bad user input on keypad.
-3.  Add Alarm function.
