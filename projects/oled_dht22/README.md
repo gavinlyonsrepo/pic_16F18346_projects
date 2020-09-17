@@ -1,5 +1,3 @@
-
-
 Overview
 --------------------------------------------
 * Name: OLED_DHT22
@@ -11,14 +9,6 @@ Overview
 * MCC version: 3.95
 * PIC: PIC16F18346
 * IDE:  MPLAB X v5.30
-
-
-Table of contents
----------------------------
-
-  * [Overview](#overview)
-  * [Features](#features)
-  * [Output](#output)
   
 Features
 ----------------------
@@ -43,15 +33,7 @@ The sensor code is also in a library(dht22.c and dht22.h)
 The SSD1306 OLED display communicates with the master device over I2C mode.
 It is controlled via the two pin I2C bus. Both pins must be held logic high by pull-up resistors. 
 
-The ASCII based font file is a called "font.h". Each character is printed in a 5 by 8 box pixel.
-(width by height) with a another blank byte printed in between so a box of 48 pixels in total for each character.
-The screen is 128 by 32 pixels. So (32/8) 4 rows available and (128/6) 21 columns available.
-
-This library turns the OLED into a character 21x04 based screen.
-There are no graphics in library and one font. 
-Will also work on a  OLED 128 by 32 SSD1306, as well with one modification to library.
-( comment in/out a block of marked code at top of oled.h).
-
+The ASCII based font file is a called "font.h". The font is 5 x 8 with two blank vertical bytes added for padding so in effect a 7 x 8 size font . The screen is (128 by 64) so it's (128/7 by 64/8) or 1(18 by 08). This library turns the OLED into a character 18x08 based screen. Total characters = 144. There are no graphics in library and one font. Will also work on a OLED 128 by 32 SSD1306 as well, with one modification to library. ( comment in/out a define at top of header file.).
 
 **DHT 22 sensor**
 

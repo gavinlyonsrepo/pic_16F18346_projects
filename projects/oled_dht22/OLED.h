@@ -1,14 +1,14 @@
 /*
 * Project Name: OLED_DHT22
 * File: OLED.h 
-* Description: OLED 128X32  SSD1306 I2C library header file
+* Description: OLED 128X64  SSD1306 I2C library header file
 * Author: Gavin Lyons.
 * Complier: xc8 v2.10 compiler
 * PIC: PIC16F18346
 * IDE:  MPLAB X v5.30
 * Created: Feb  2020
 * Description: See URL for full details.
-* URL: https://github.com/gavinlyonsrepo/pic_i6F18346_projects
+* URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
 
 #ifndef OLED_H
@@ -16,21 +16,20 @@
 
 #define SSD1306_ADDR          0x3C
 
-
-/* SSD1306 Display Type 128*32*/
-/* comment this in  for 128*32 screen
-#define SSD1306_128_32
-#define SSD1306_LCDWIDTH                  128
-#define SSD1306_LCDHEIGHT                 32
-#define SSD1306_CLEAR_SIZE                512 
-*/
-
-/* SSD1306 Display Type 128*64*/
-
+/* SSD1306 Display Type*/
 #define SSD1306_128_64
-#define SSD1306_LCDWIDTH                  128
-#define SSD1306_LCDHEIGHT                 64
-#define SSD1306_CLEAR_SIZE                1024
+// #define SSD1306_128_32
+
+#if defined SSD1306_128_64
+  #define SSD1306_LCDWIDTH                  128
+  #define SSD1306_LCDHEIGHT                 64
+  #define SSD1306_CLEAR_SIZE                1024
+#endif
+#if defined SSD1306_128_32
+  #define SSD1306_LCDWIDTH                  128
+  #define SSD1306_LCDHEIGHT                 32
+  #define SSD1306_CLEAR_SIZE                512 
+#endif
 
 
 #define SSD1306_COMMAND                     0x00
@@ -80,7 +79,9 @@
 #define SSD1306_SET_PRECHARGE_PERIOD                    0xD9
 #define SSD1306_SET_VCOM_DESELECT                       0xDB
 
-
+// Misc
+#define FONT_ONE_WIDTH 5
+#define ASCII_OFFSET 32
 
 /*=== Function prototypes  =======*/
 void Oled_Data( uint8_t );

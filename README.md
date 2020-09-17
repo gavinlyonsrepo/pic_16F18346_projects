@@ -1,14 +1,7 @@
-Table of contents
----------------------------
-
-  * [Table of contents](#table-of-contents)
-  * [Overview](#overview)
-  * [Project List](#project-list)
-
 Overview
 --------------------------------------------
 * Name: pic_16F18346_projects
-* Description: A set of projects and example code for a **Microchip** 
+* Description: A set of projects and libraries for a **Microchip** 
  PIC 16F18346 Micro-controller.
 * Author: Gavin Lyons 
 * Mail: glyons66@hotmail.com
@@ -17,7 +10,7 @@ Overview
 
 Project List
 -----------------------------------------
-A set of Projects and example code for the 20-pin, 8-bit PIC 16F18346 Microcontroller,
+A set of Projects for the 20-pin, 8-bit PIC 16F18346 Microcontroller,
 made by *Microchip*.  
 PIC16F18346 microcontrollers feature Analog, Core Independent Peripherals and communication peripherals,
 combined with Extreme Low Power (XLP) for wide range of general purpose and low power applications. 
@@ -28,9 +21,9 @@ Each Project is the relevant sub folder at url link. All code is written in C (x
 
 | Num | Desc | Link |
 | --- | --- | --- |
-| 1 |  DHT22 sensor data displayed on ssd1306 OLED | [URL](projects/oled_dht22) |
-| 2 |  DHT22 sensor data displayed on Seven Segment (ASCII Library)  | [URL](projects/7seg_dht22) |
-| 3 |  Ds1307 Real time clock data displayed on LCD | [URL](projects/ds1307) |
+| 1 |  DHT22 sensor data displayed on SSD1306 OLED (ASCII text Library)  | [URL](projects/oled_dht22) |
+| 2 |  DHT22 sensor data displayed on Seven Segment (ASCII text Library)  | [URL](projects/7seg_dht22) |
+| 3 |  DS1307 RTC Real time clock  | [URL](projects/ds1307) |
 | 4 |  BMP180 pressure sensor data displayed on LCD | [URL](projects/bmp180) |
 | 5 |  ------- |--------- |
 
