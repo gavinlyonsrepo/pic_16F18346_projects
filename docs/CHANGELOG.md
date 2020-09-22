@@ -5,3 +5,6 @@
 
 ### July 2020
 	* Added Ds1307 and BMP180 projects
+
+### Sep 2020
+	* Added ST7735 TFT library.
