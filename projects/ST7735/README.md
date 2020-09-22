@@ -34,7 +34,7 @@ and TextFonts.h file that contains the ASCII pixel font.
 
 | TFT PinNum  Pindesc | PIC SW SPI | PIC HW SPI |
 | --- | --- | --- | 
-| 1 LED | 3.3V | LED |
+| 1 LED | 3.3V VCC | 3.3 VCC |
 | 2 SCLK | RA4 | RB6 SCK1 |
 | 3 SDA | RA2 | RB5 SD01 |
 | 4 A0/DC | RA1 | RA1 |

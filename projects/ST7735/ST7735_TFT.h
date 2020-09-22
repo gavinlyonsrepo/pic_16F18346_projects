@@ -96,7 +96,6 @@
 
 bool wrap = true;
 uint8_t colstart = 0, rowstart = 0, _tft_type;
-enum ST7735_iconMods { NONE=0,TRANSPARENT,REPLACE,BOTH};//0,1,2,3
 
 // ******** FUNCTION  PROTOTYPES ************ 
 
