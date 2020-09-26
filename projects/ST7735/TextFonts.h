@@ -11,8 +11,8 @@
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
 
-#ifndef font_H
-#define font_H
+#ifndef TEXTFONTS_H
+#define TEXTFONTS_H
 
 const char Font[] = {
 0x00, 0x00, 0x00, 0x00, 0x00,
