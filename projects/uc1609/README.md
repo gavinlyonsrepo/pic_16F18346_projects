@@ -1,14 +1,5 @@
 ![ ERM19264 ](https://github.com/gavinlyonsrepo/ERM19264_UC1609/blob/main/extras/image/color.jpg)
 
-Table of contents
----------------------------
-
-  * [Overview](#overview)
-  * [Output](#output)
-  * [Installation](#installation)
-  * [Hardware](#hardware)
-  * [Features](#features)
-  * [Ports](#ports)
   
 Overview
 --------------------
@@ -16,10 +7,10 @@ Overview
 * Title : Library for ERM19264-5 v3 LCD  (UC1609C controller) 
 * Description : 
 
-1. Arduino library.      
+1. PIC library.      
 2. Inverse, rotate and contrast control. 
 3. ASCII text strings and character text display.
-4. Graphics library included based on the Adafruit GFX library.
+4. Graphics library included
 5. Sleep mode.
 6. Buffer
 7. custom bitmaps supported.
@@ -41,9 +32,18 @@ Output Screenshots, From left to right top to bottom.
 Connections
 -----------------------------
 
+1. RA0 - CS
+2. RA1 - CD
+3. RB5 - SDA
+4. RB6 - SCLK
+5. RA5 - RST
 
 Ports
 ------------------------------------------
 
-* ERM19264_UC1609_T (T for text). Light weight Text only version for arduino ecosystem [here at link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_T)
+Lots more info and documentation at links 1 and 2, This library is a truncated port of no 1.
+
+1. Arduino Library full graphics [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
+2. Arduino Library Text [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_T)
+3. Pic library text only light weight [Link](https://github.com/gavinlyonsrepo/pic_16F18346_projects)
 
