@@ -8,3 +8,6 @@
 
 ### Sep 2020
 	* Added ST7735 TFT library.
+
+### Nov 2020
+	* Added UC1609 library Projects.
