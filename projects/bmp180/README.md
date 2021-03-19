@@ -4,7 +4,7 @@ Overview
 --------------------------------------------
 * Name: BMP180
 * Description: Display BMP180 barometric pressure sensor data on a
-  HD44780-based LCD 16x02 I2C bus & PCF8574 interface, e
+  HD44780-based LCD 16x02 I2C bus & PCF8574 interface
 * Author: Gavin Lyons.
 * Complier: xc8 v2.1.0
 * Foundation services library: 0.2.0 (I2C)
@@ -67,7 +67,7 @@ Output
 -----------------------
 
 Pressure output shown in pascals, the library can also calculate pressure by removing effects of 
-altitude using sea level pressure and altitude itself for a given pressure. Also Temperature sensor included. 
+altitude using sea level pressure and altitude itself for a given pressure. Also Temperature data included. 
 
 ![ output ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/bmp180.jpg)
 

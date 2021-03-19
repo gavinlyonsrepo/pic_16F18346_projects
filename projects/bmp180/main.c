@@ -61,8 +61,8 @@ void pressure_display(void)
     lcd_clear(LINE_1);
     lcd_clear(LINE_2);
     char press[16];
-    char outlook[7];
     int32_t pressure;
+
     pressure = readPressure();
     sprintf(press, "Press: %ld Pa", pressure);
     lcd_send_cmd (LCD_LINE1);
@@ -84,7 +84,7 @@ void pressure_display(void)
          else if (pressure >=1025){
          lcd_send_string( "DRY");
         }
-    lcd_send_string(outlook);
+ 
 }
 
 void Setup(void)
