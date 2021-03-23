@@ -21,6 +21,8 @@ and a TextFonts.h file that contains the ASCII pixelfonts and splash screen imag
 
 The sensor code is also in a library(dht22.c and dht22.h)
 
+Current consumption 11mA. 
+
 **Connections**
 
 1. RC3 = DHT22 Sensor line,
@@ -61,3 +63,9 @@ Error codes:
 Output
 -----------------------
 ![ output ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/output4.jpg)
+
+
+Schematic
+------------------------
+
+![ schematic ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/dht22sch.jpg)
