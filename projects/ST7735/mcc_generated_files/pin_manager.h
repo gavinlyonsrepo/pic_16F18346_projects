@@ -201,26 +201,6 @@
 #define RB6_SetAnalogMode()         do { ANSELBbits.ANSB6 = 1; } while(0)
 #define RB6_SetDigitalMode()        do { ANSELBbits.ANSB6 = 0; } while(0)
 
-// get/set LED_RC5 aliases
-#define LED_RC5_TRIS                 TRISCbits.TRISC5
-#define LED_RC5_LAT                  LATCbits.LATC5
-#define LED_RC5_PORT                 PORTCbits.RC5
-#define LED_RC5_WPU                  WPUCbits.WPUC5
-#define LED_RC5_OD                   ODCONCbits.ODCC5
-#define LED_RC5_ANS                  ANSELCbits.ANSC5
-#define LED_RC5_SetHigh()            do { LATCbits.LATC5 = 1; } while(0)
-#define LED_RC5_SetLow()             do { LATCbits.LATC5 = 0; } while(0)
-#define LED_RC5_Toggle()             do { LATCbits.LATC5 = ~LATCbits.LATC5; } while(0)
-#define LED_RC5_GetValue()           PORTCbits.RC5
-#define LED_RC5_SetDigitalInput()    do { TRISCbits.TRISC5 = 1; } while(0)
-#define LED_RC5_SetDigitalOutput()   do { TRISCbits.TRISC5 = 0; } while(0)
-#define LED_RC5_SetPullup()          do { WPUCbits.WPUC5 = 1; } while(0)
-#define LED_RC5_ResetPullup()        do { WPUCbits.WPUC5 = 0; } while(0)
-#define LED_RC5_SetPushPull()        do { ODCONCbits.ODCC5 = 0; } while(0)
-#define LED_RC5_SetOpenDrain()       do { ODCONCbits.ODCC5 = 1; } while(0)
-#define LED_RC5_SetAnalogMode()      do { ANSELCbits.ANSC5 = 1; } while(0)
-#define LED_RC5_SetDigitalMode()     do { ANSELCbits.ANSC5 = 0; } while(0)
-
 /**
    @Param
     none
