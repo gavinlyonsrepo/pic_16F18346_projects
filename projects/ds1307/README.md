@@ -18,9 +18,18 @@ Table of contents
 ---------------------------
 
   * [Overview](#overview)
+  * [TODO](#todo)
   * [Features](#features)
   * [Output](#output)
   * [Schematic](#schematic)
+  
+TODO
+----------------------- 
+
+1. Add programmable Alarm mode + buzzer
+2. Add Sleep mode
+3. Add temperature sensor
+4. Add init function to check if DS1307 present and/or running.
   
 Features
 ----------------------
