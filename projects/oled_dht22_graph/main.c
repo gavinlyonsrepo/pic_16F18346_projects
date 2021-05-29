@@ -16,25 +16,25 @@
 #include "mcc_generated_files/mcc.h"
 #include "SSD1306OLED.h"
 #include "TextFonts.h"
+#include "BitmapData.h"
 #include "dht22.h" 
-
-uint16_t testcount = 1;
 
 // *********** Defines **************
 #define TESTDELAY 7000
-#define INITDELAY 5000
+#define INITDELAY 2000
 
 // ************ Function Headers ****************
 void Setup(void);
-void DisplayData(void);
+void DisplayData(uint16_t);
 
 // ************  Main application ***************
 void main(void)
 {
    Setup(); 
+   uint16_t testcount = 1;
    while (1)
    {
-       DisplayData();
+       DisplayData(testcount);
        testcount++;
        if (testcount > 60000) testcount = 1;
        __delay_ms(TESTDELAY);
@@ -50,7 +50,8 @@ void Setup(void)
     SYSTEM_Initialize();
     LED_RC2_SetHigh(); 
     SSD1306_Init();
-    SSD1306_BITMAP(myimage);
+    __delay_ms(50);
+    SSD1306_Bitmap(myimage);
     SSD1306_UpdateDisplay();
     __delay_ms(INITDELAY); // Display splash screen
     SSD1306_FillBuffer(0x00);
@@ -58,11 +59,11 @@ void Setup(void)
     uint8_t dht22_status_dummy=0;
     dht22_status_dummy = DHT22_read(); //dummy run as first read is always: Error 1201
     LED_RC2_SetLow(); 
-    __delay_ms(500);
+    __delay_ms(50);
 }
 
 //Function to Display Data to OLED
-void DisplayData(void)
+void DisplayData(uint16_t count)
 {  
        // adjusted %UR/Temp data
 		int16_t te=0;
@@ -73,7 +74,7 @@ void DisplayData(void)
         char temp[9];
         char hum[9];
         
-        dht22_status = DHT22_read();
+       dht22_status = DHT22_read();
         
         // Title
         SSD1306_SetFont(UNO);
@@ -139,7 +140,7 @@ void DisplayData(void)
             // Test count display
             SSD1306_SetFont(PICO);
             SSD1306_Write_Text(50, 58, "TC");
-            sprintf(temp, "%u", testcount);
+            sprintf(temp, "%u", count);
 		    SSD1306_Write_Text(60, 58, temp);
             
             SSD1306_UpdateDisplay();

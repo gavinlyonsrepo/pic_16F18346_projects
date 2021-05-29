@@ -11,6 +11,9 @@
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
 
+#ifndef _dht22_lib_H
+#define	_dht22_lib_H
+
 #include <xc.h>
 #include <stdint.h>    
 #include "mcc_generated_files/mcc.h"
@@ -34,3 +37,7 @@ uint8_t  DHT22_data[5]; // data buffer from sensor
 extern void DHT22_expect(uint8_t level);
 extern uint8_t DHT22_start(void);
 extern uint8_t DHT22_read(void);
+
+
+
+#endif	// header guard
