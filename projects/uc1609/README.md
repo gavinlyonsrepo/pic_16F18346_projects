@@ -7,14 +7,15 @@ Overview
 * Title : Library for ERM19264-5 v3 LCD  (UC1609C controller) 
 * Description : 
 
-1. PIC library.      
+1. PIC library written in C Xc8 compiler.      
 2. Inverse, rotate and contrast control. 
 3. ASCII text strings and character text display.
 4. Graphics library included
 5. Sleep mode.
 6. Buffer
-7. custom bitmaps supported.
+7. Custom bitmaps supported.
 8. Hardware SPI.
+9. 6 fonts, Size adjustable.
 
 Output
 ---------------------------------
@@ -42,8 +43,8 @@ Ports
 ------------------------------------------
 
 Lots more info and documentation at links 1 and 2, This library is a truncated port of no 1.
+It only supports Hardware SPI and only has one buffer mode.
+There is also  light weight basic text only versions available for arduino and PIC at this repo.
 
-1. Arduino Library full graphics [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
-2. Arduino Library Text [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_T)
-3. Pic library text only light weight [Link](https://github.com/gavinlyonsrepo/pic_16F18346_projects)
-
+1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
+2. Raspberry PI C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_RPI)

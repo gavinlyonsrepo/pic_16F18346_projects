@@ -27,7 +27,7 @@
 #define UC1609_GET_STATUS 0x01 // Not used v1.0
 
 // UC1909 Write registers
-#define UC1609_SYSTEM_RESET 0xE2 // Not used v1.0
+#define UC1609_SYSTEM_RESET 0xE2 
 
 #define UC1609_POWER_CONTROL 0x2F 
 #define UC1609_PC_SET 0x06 // PC[2:0] 110 Internal V LCD (7x charge pump) + 10b: 1.4mA
@@ -64,15 +64,14 @@
 #define UC1609_ROTATION_FLIP_THREE 0x00
 
 // Delays
-#define UC1609_RESET_DELAY 50 // mS delay . datasheet says 3uS
-#define UC1609_RESET_DELAY2   0 // mS delay . DataSheet says 5mS
-#define UC1609_INIT_DELAY 100   //  mS delay
-#define UC1609_INIT_DELAY2 3 // mS delay . DataSheet says 3mS
+#define UC1609_RESET_DELAY 3 // ms Delay
+#define UC1609_RESET_DELAY2   0 // mS delay datasheet says 5mS, does not work
+#define UC1609_INIT_DELAY 100   //  mS delay ,after init 
+#define UC1609_INIT_DELAY2 3 // mS delay,  before reset called
 
-// No buffer font
-#define UC1609_ASCII_OFFSET 0x20 //0x20, ASCII character for Space
-#define UC1609_FONTPADDING  send_data(0x00)
-#define UC1609_FONTWIDTH 5
+// No buffer mode font
+#define UC_NB_FONTPADDING  send_data(0x00)
+#define UC_NB_FONTWIDTH 5
 
 // GPIO
 #define UC1609_CS_SetHigh CS_RA0_SetHigh() 

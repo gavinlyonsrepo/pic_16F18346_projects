@@ -34,10 +34,6 @@ void custom_graphics_init(int16_t w, int16_t h)
   wrap      = true;
 }
 
-void drawText(const char *characters)
-{
-    
-}
 // Draw a circle outline
 void drawCircle(int16_t x0, int16_t y0, int16_t r,
     uint16_t color) {
@@ -338,42 +334,57 @@ void fillTriangle ( int16_t x0, int16_t y0,
 
 // Draw a character
 void drawChar(int16_t x, int16_t y, unsigned char c,
-			    uint16_t color, uint16_t bg, uint8_t size) {
+								uint8_t color, uint8_t bg, uint8_t size) {
 
-  if((x >= _width)            || // Clip right
-     (y >= _height)           || // Clip bottom
-     ((x + 6 * size - 1) < 0) || // Clip left
-     ((y + 8 * size - 1) < 0))   // Clip top
-    return;
+	if((x >= _width)            || // Clip right
+		 (y >= _height)           || // Clip bottom
+		 ((x + (_CurrentFontWidth+1) * size - 1) < 0) || // Clip left
+		 ((y + _CurrentFontheight * size - 1) < 0))   // Clip top
+		return;
 
-  for (int8_t i=0; i<6; i++ ) {
-    uint8_t line;
-    if (i == 5)
-    { 
-      line = 0x0;
-    }
-    else 
-    {
-        line =  myASCII_font[(c*5) + i];   
-        //line = myASCII_font+(c*5)+i;
-    }
-    for (int8_t j = 0; j<8; j++) {
-      if (line & 0x1) {
-        if (size == 1) // default size
-          drawPixel(x+i, y+j, color);
-        else {  // big size
-          fillRect(x+(i*size), y+(j*size), size, size, color);
-        } 
-      } else if (bg != color) {
-        if (size == 1) // default size
-          drawPixel(x+i, y+j, bg);
-        else {  // big size
-          fillRect(x+i*size, y+j*size, size, size, bg);
-        }
-      }
-      line >>= 1;
-    }
-  }
+	for (uint8_t i=0; i<(_CurrentFontWidth+1); i++ ) {
+		uint8_t line;
+		if (i == _CurrentFontWidth)
+		{ 
+			line = 0x0;
+		}
+		else 
+		{
+			 switch (_FontNumber) {
+#ifdef UC1609_Font_One
+				case 1: line = UC_Font_One[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif 
+#ifdef UC1609_Font_Two
+				case 2: line = UC_Font_Two[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif
+#ifdef UC1609_Font_Three
+				case 3: line = UC_Font_Three[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif
+#ifdef UC1609_Font_Four
+				case 4: line = UC_Font_Four[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif
+				default: // wrong font number
+						return;
+				break;
+				}
+		}
+		for (int8_t j = 0; j<_CurrentFontheight; j++) {
+			if (line & 0x1) {
+				if (size == 1) // default size
+					drawPixel(x+i, y+j, color);
+				else {  // big size
+					fillRect(x+(i*size), y+(j*size), size, size, color);
+				} 
+			} else if (bg != color) {
+				if (size == 1) // default size
+					drawPixel(x+i, y+j, bg);
+				else {  // big size
+					fillRect(x+i*size, y+j*size, size, size, bg);
+				}
+			}
+			line >>= 1;
+		}
+	}
 }
 
 void setCursor(int16_t x, int16_t y) {
@@ -403,19 +414,166 @@ int16_t height(void){
   return _height;
 }
 
-void drawtext(uint8_t x, uint8_t y, char *_text, uint16_t color, uint16_t bg, uint8_t size){
+void drawText(uint8_t x, uint8_t y, char *_text, uint16_t color, uint16_t bg, uint8_t size){
   uint8_t cursor_x, cursor_y;
   uint16_t textsize, i;
   cursor_x = x, cursor_y = y;
   textsize = strlen(_text);
   for(i = 0; i < textsize; i++){
-    if(wrap && ((cursor_x + size * 5) > _width)){
+    if(wrap && ((cursor_x + size * _CurrentFontWidth) > _width)){
       cursor_x = 0;
       cursor_y = cursor_y + size * 7 + 3 ;
       if(cursor_y > _height) cursor_y = _height;
       if(_text[i] == 0) goto _skip; }
     drawChar(cursor_x, cursor_y, _text[i], color, bg, size);
-    cursor_x = cursor_x + size * 6;
+    cursor_x = cursor_x + size * (_CurrentFontWidth + 1);
     if(cursor_x > _width) cursor_x = _width;
     _skip:;}
+}
+
+// Desc :  Set the font number
+// Param1: fontnumber 1-5
+// 1=default 2=thick 3=seven segment 4=wide 5=bignums 6 = mednums
+
+void setFontNum(uint8_t FontNumber) 
+{
+	_FontNumber = FontNumber;
+	
+	enum LCD_Font_width
+	{
+		FONT_W_FIVE = 5, FONT_W_SEVEN = 7, FONT_W_FOUR = 4, FONT_W_EIGHT = 8,FONT_W_16= 16
+	}; // width of the font in bytes cols.
+	
+	enum LCD_Font_offset
+	{
+		FONT_O_EXTEND = ERM19264_ASCII_OFFSET, FONT_O_SP = ERM19264_ASCII_OFFSET_SP, FONT_N_SP = ERM19264_ASCII_OFFSET_NUM
+	}; // font offset in the ASCII table
+	
+	enum LCD_Font_height
+	{
+		FONT_H_8 = 8, FONT_H_16 = 16, FONT_H_32 = 32
+	}; // width of the font in bits
+	
+	enum LCD_Font_width setfontwidth;
+	enum LCD_Font_offset setoffset;
+	enum LCD_Font_height setfontheight;
+	
+	switch (_FontNumber) {
+		case 1:  // Norm default 5 by 8
+			_CurrentFontWidth = (setfontwidth = FONT_W_FIVE);
+			_CurrentFontoffset =  (setoffset = FONT_O_EXTEND);
+			_CurrentFontheight = (setfontheight=FONT_H_8);
+		break; 
+		case 2: // Thick 7 by 8 (NO LOWERCASE LETTERS)
+			_CurrentFontWidth = (setfontwidth = FONT_W_SEVEN);
+			_CurrentFontoffset =  (setoffset = FONT_O_SP);
+			_CurrentFontheight = (setfontheight=FONT_H_8);
+		break; 
+		case 3:  // Seven segment 4 by 8
+			_CurrentFontWidth = (setfontwidth = FONT_W_FOUR);
+			_CurrentFontoffset =  (setoffset = FONT_O_SP);
+			_CurrentFontheight = (setfontheight=FONT_H_8);
+		break;
+		case 4: // Wide  8 by 8 (NO LOWERCASE LETTERS)
+			_CurrentFontWidth = (setfontwidth = FONT_W_EIGHT);
+			_CurrentFontoffset =  (setoffset = FONT_O_SP);
+			_CurrentFontheight = (setfontheight=FONT_H_8);
+		break; 
+		case 5: // big nums 16 by 32 (NUMBERS + : only)
+			_CurrentFontWidth = (setfontwidth = FONT_W_16);
+			_CurrentFontoffset =  (setoffset = FONT_N_SP);
+			_CurrentFontheight = (setfontheight=FONT_H_32);
+		break; 
+		case 6: // med nums 16 by 16 (NUMBERS + : only)
+			_CurrentFontWidth = (setfontwidth = FONT_W_16);
+			_CurrentFontoffset =  (setoffset = FONT_N_SP);
+			_CurrentFontheight = (setfontheight=FONT_H_16);
+		break; 
+		default: // if wrong font num passed in,  set to default
+			_CurrentFontWidth = (setfontwidth = FONT_W_FIVE);
+			_CurrentFontoffset =  (setoffset = FONT_O_EXTEND);
+			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_FontNumber = 1;
+		break;
+	}
+	
+}
+
+// Desc: writes a char (c) on the TFT
+// Param 1 , 2 : coordinates (x, y).
+// Param 3: The ASCII character
+// Param 4: color 
+// Param 5: background color
+// Notes for font 5 & font 6 (bignums  + mednums)  only
+void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg) 
+{
+
+	uint8_t i, j;
+	uint8_t ctemp = 0, y0 = y; 
+
+	for (i = 0; i < (_CurrentFontheight*2); i++) 
+	{
+		if (_FontNumber == 5){
+		#ifdef UC1609_Font_Five
+			ctemp = UC_Font_Five[c - _CurrentFontoffset][i];
+		#endif
+		}
+		else if (_FontNumber == 6){
+		#ifdef UC1609_Font_Six
+			ctemp = UC_Font_Six[c - _CurrentFontoffset][i];
+		#endif
+		}else{ 
+			return;
+		}
+		
+		for (j = 0; j < 8; j++) 
+		{
+			if (ctemp & 0x80) 
+			{
+				drawPixel(x, y, color);
+			} else {
+				drawPixel(x, y, bg);
+			}
+
+			ctemp <<= 1;
+			y++;
+			if ((y - y0) == _CurrentFontheight) {
+				y = y0;
+				x++;
+				break;
+			}
+	}
+	}
+}
+
+// Desc: Writes text string (*ptext) on the TFT 
+// Param 1 , 2 : coordinates (x, y).
+// Param 3: pointer to string 
+// Param 4: color 
+// Param 5: background color
+// Notes for font 5 & font 6 (bignums  + mednums)  only
+void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t bg) 
+{
+
+	if (_FontNumber < 5)
+	{
+		return;
+	}
+
+	while (*pText != '\0') 
+	{
+		if (x > (_width - _CurrentFontWidth )) 
+		{
+			x = 0;
+			y += _CurrentFontheight ;
+			if (y > (_height - _CurrentFontheight)) 
+			{
+					y = x = 0;
+			}
+		}
+
+		drawCharNumFont(x, y, *pText, color, bg);
+		x += _CurrentFontWidth ;
+		pText++;
+	}
 }

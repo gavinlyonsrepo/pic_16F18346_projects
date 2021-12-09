@@ -46,6 +46,8 @@ Fonts.
 2. UNO font X by Y = 6 by 8 . 147 characters.
 3. MEGA font X by Y  = 16 by 16 . 32 characters
 
+More fonts can be found here at  [link](http://www.rinkydinkelectronics.com/r_fonts.php),as  well as instructions on how to create them.
+
 **DHT 22 sensor**
 
 Digital relative humidity & temperature sensor AM2302/DHT22.

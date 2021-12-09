@@ -27,10 +27,6 @@ Backlight control is left to user.
 
 **PCB Version**
 
-It may  work on other TFT displays using the different init functions, but not tested.
-In the header file in USER OPTION 1 PCB_TYPE select your PCB.
-default is red.  User can adjust pixel height, pixel width and screen offsets in the header file. 
-
 There are 4 types of the ST7735 TFT display supported.
 
 1. ST7735B controller 
@@ -38,6 +34,11 @@ There are 4 types of the ST7735 TFT display supported.
 3. ST7735R Red Tab
 4. ST7735R Black Tab (ST7735S)
 
+Only red tab has been tested here. 
+It should work on other TFT displays using the different init functions, but not tested.
+In the header file in USER OPTION 1 PCB_TYPE select your PCB.
+default is Red tab.  User can adjust pixel height, pixel width and screen offsets in the header file. 
+ 
 **SPI**
 
 This library supports both Hardware SPI and software SPI. Change the define a top of header file

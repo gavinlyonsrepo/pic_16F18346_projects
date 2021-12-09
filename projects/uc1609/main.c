@@ -15,6 +15,9 @@
 #include "mcc_generated_files/mcc.h"
 #include "ERM19264_UC1609.h"
 
+// For testing fonts 2-6  Comment in define and defines in font file  in FONT DEFINE SECTION
+//#define TestFontsOn
+
 #define mylcdheight 64
 #define mylcdwidth  192
 
@@ -36,6 +39,7 @@ void main(void)
     LCDFillScreen(0x00, 0); // Clear the screen
     setTextColor(BACKGROUND, FOREGROUND);
     setTextSize(1); 
+    setFontNum(1);
     buffer = (uint8_t*) &screenBuffer;  // Assign the pointer to the buffer
     custom_graphics_init( mylcdwidth, mylcdheight);   
     
@@ -47,9 +51,10 @@ void main(void)
          LCDFillScreen(0x00, 0); // Clear the screen
         
         // Test 2: text
+        setFontNum(1);
         drawChar(150, 30,'1', BACKGROUND, FOREGROUND, 2);
-        drawtext(10, 10, "hello", FOREGROUND, BACKGROUND, 1);
-        //setCursor(120,10);
+        drawText(10, 10, "hello world ", FOREGROUND, BACKGROUND, 1);
+        
         LCDupdate();
         __delay_ms(5000);
         LCDclearBuffer(); // Clear the buffer
@@ -75,8 +80,78 @@ void main(void)
         
          LCDupdate();
         __delay_ms(5000);
-        LCDclearBuffer(); 
+        LCDclearBuffer(); // Clear the buffer
+             
+#ifdef TestFontsOn  // testing fonts 2-6
+        setFontNum(1);
+        // TEST 1 
+        drawText(0,0 ,"HelloWorld", FOREGROUND, BACKGROUND, 3);
+
+        // Test 2
+        drawText(0, 30 , "1234567890", FOREGROUND, BACKGROUND, 2) ;
+
+        // Test 3
+        drawText(0, 50, "HelloWorld", BACKGROUND, FOREGROUND, 1);
+
+        // Test 4
+        drawChar(150, 25 , 'H', FOREGROUND, BACKGROUND, 4);
+        
+         LCDupdate();
+        __delay_ms(5000);
+        LCDclearBuffer(); // Clear the buffer
+        
+        // Test 5 
+        uint8_t row = 0;
+        uint8_t col = 0;
+        for (char i = 0; i < 126; i++)
+        {
+            if (i == '\n' || i == '\r') continue;
+           drawChar(col, row, i, FOREGROUND, BACKGROUND, 1);
+            col +=8;
+            if (col > 180) {
+              row += 9;
+              col = 0;
+		     }
+        }
         LCDupdate();
+        __delay_ms(5000);
+        LCDclearBuffer(); // Clear the buffer
+        
+        // Test font 2 3 4
+        setFontNum(2); // Thick 
+        drawText(0,0 ,"HELLO WORLD 123", FOREGROUND, BACKGROUND, 1);
+        setFontNum(3);  //seven segment
+        drawText(0,20 ,"HELLO WORLD 456 ", FOREGROUND, BACKGROUND, 1);
+        setFontNum(4);  // wide 
+        drawText(0,40 ,"HELLO WORLD 789", FOREGROUND, BACKGROUND, 1);
+        
+        LCDupdate();
+        __delay_ms(5000);
+        LCDclearBuffer(); // Clear the buffer
+        
+        // Test font 5
+        setFontNum(5);
+        drawTextNumFont(0, 32, "12345" , BACKGROUND, FOREGROUND);  
+        drawCharNumFont(0, 0, '5', FOREGROUND, BACKGROUND); 
+        drawCharNumFont(160, 0, '5', BACKGROUND, FOREGROUND); 
+       
+        LCDupdate();
+        __delay_ms(5000);
+        LCDclearBuffer(); // Clear the buffer
+        
+         // Test font 6
+        setFontNum(6);
+        drawTextNumFont(0, 32, "123456" , BACKGROUND, FOREGROUND);  
+        drawCharNumFont(0, 0, '6', FOREGROUND, BACKGROUND); 
+        drawCharNumFont(160, 0, '6', BACKGROUND, FOREGROUND); 
+        LCDupdate();
+        
+        __delay_ms(5000);
+        LCDclearBuffer(); // Clear the buffer
+        
+#endif
+        LCDupdate(); 
+ 
     }
 }
 // EOF
