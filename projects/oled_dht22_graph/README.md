@@ -9,7 +9,8 @@ Overview
 * MCC version: 3.95
 * PIC: PIC16F18346
 * IDE:  MPLAB X v5.30
-  
+* Other versions: Text only OLED library version here [URL](projects/oled_dht22)
+
 Features
 ----------------------
 
