@@ -16,7 +16,7 @@ Overview
 7. Custom bitmaps supported.
 8. Hardware SPI.
 9. 6 fonts, Size adjustable.
-10. Light weight text only  version here  | [URL](projects/uc1609_text) |
+
 
 Output
 ---------------------------------
