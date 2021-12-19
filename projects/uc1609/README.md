@@ -16,6 +16,7 @@ Overview
 7. Custom bitmaps supported.
 8. Hardware SPI.
 9. 6 fonts, Size adjustable.
+10. Light weight text only  version here  | [URL](projects/uc1609_text) |
 
 Output
 ---------------------------------
@@ -44,7 +45,8 @@ Ports
 
 Lots more info and documentation at links 1 and 2, This library is a truncated port of no 1.
 It only supports Hardware SPI and only has one buffer mode.
-There is also  light weight basic text only versions available for arduino and PIC at this repo.
+There is also  light weight basic text only versions available for arduino and PIC at "gavinlyonsrepo" on github.
 
 1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
 2. Raspberry PI C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_RPI)
+3. STM32 C++  [Link](https://github.com/gavinlyonsrepo/STM32_projects)
