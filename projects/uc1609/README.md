@@ -12,7 +12,7 @@ Overview
 3. ASCII text strings and character text display.
 4. Graphics library included
 5. Sleep mode.
-6. Buffer
+6. Single Buffer Mode
 7. Custom bitmaps supported.
 8. Hardware SPI.
 9. 6 fonts, Size adjustable.
@@ -24,12 +24,20 @@ Output
 Output Screenshots, From left to right top to bottom.
 
 1. Full screen bitmap displayed
-2. Multi buffer mode screen divided into two buffers
+2. Multi buffer mode screen divided into two buffers (not available on PIC port)
 3. Different size and type of fonts 
 4. Available font printed out (this can be expanded by mod see features)
 
 ![op](https://github.com/gavinlyonsrepo/ERM19264_UC1609/blob/main/extras/image/output.jpg)
 
+
+Buffer 
+----------------------------------
+
+Two  buffer functions :
+
+1. LCDBitmap() writes bitmap directly to LCD with vertically addressing
+2. drawBitmapBuffer() writes bitmap to software buffer with  horizontally addressing 
 
 Connections
 -----------------------------
@@ -40,13 +48,12 @@ Connections
 4. RB6 - SCLK
 5. RA5 - RST
 
-Ports
+Arduino Library
 ------------------------------------------
 
-Lots more info and documentation at links 1 and 2, This library is a truncated port of no 1.
-It only supports Hardware SPI and only has one buffer mode.
+Lots more info and documentation at arduino Link.
+This library is a truncated port of arduino library.
+This PIC port  only supports Hardware SPI and only has one buffer mode(singel buffer).
 There is also  light weight basic text only versions available for arduino and PIC at "gavinlyonsrepo" on github.
 
 1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
-2. Raspberry PI C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609_RPI)
-3. STM32 C++  [Link](https://github.com/gavinlyonsrepo/STM32_projects)

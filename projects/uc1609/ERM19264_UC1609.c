@@ -160,12 +160,12 @@ void  LCDFillPage(uint8_t dataPattern)
  UC1609_CS_SetHigh;
 }
 
-//Desc: Draw a bitmap in PROGMEM to the screen
+//Desc: Draw a bitmap  to the screen
 //Param1: x offset 0-192
 //Param2: y offset 0-64
 //Param3: width 0-192
 //Param4 height 0-64
-//Param5 the bitmap
+//Param5 the bitmap  the bitmap vertical addressed.
 void  LCDBitmap(int16_t x, int16_t y, uint8_t w, uint8_t h, const uint8_t* data) 
 {
  UC1609_CS_SetLow;
@@ -222,7 +222,7 @@ void  LCDclearBuffer()
 //Param2: y offset 0-64
 //Param3: width 0-192
 //Param4 height 0-64
-//Param5 the bitmap
+//Param5 the bitmap vertical addressed.
 void  LCDBuffer(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t* data) 
 {
  UC1609_CS_SetLow;

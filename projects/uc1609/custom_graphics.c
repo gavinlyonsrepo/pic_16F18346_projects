@@ -577,3 +577,25 @@ void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t b
 		pText++;
 	}
 }
+
+// Desc: Draws an bi-color bitmap to screen
+// Param 1,2  X,Y screen co-ord
+// Param 3,4 0-127 possible values width and height of bitmap in pixels 
+// Param 4,5 bitmap colors ,bitmap is bi-color
+// Param 6: an array of unsigned chars containing bitmap data horizontally addressed.
+
+void drawBitmapBuffer(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t color, uint8_t bgcolor, const unsigned char bitmap[]) {
+	int16_t byteWidth = (w + 7) / 8;
+	uint8_t byte = 0;
+	for (int16_t j = 0; j < h; j++, y++) 
+	{
+		for (int16_t i = 0; i < w; i++) 
+		{
+			if (i & 7)
+				byte <<= 1;
+			else
+				byte = bitmap[j * byteWidth + i / 8];
+			drawPixel(x+i, y, (byte & 0x80) ? color : bgcolor);
+		}
+	}
+}
