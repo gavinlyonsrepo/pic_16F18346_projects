@@ -14,6 +14,17 @@
 #define ERM19264_ASCII_OFFSET_NUM 0x30 // Starts at number 0
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
+
+typedef enum 
+{
+    UC1609Font_Default = 1,
+    UC1609Font_Thick = 2,
+    UC1609Font_Seven_Seg = 3,
+    UC1609Font_Wide = 4,
+    UC1609Font_Bignum = 5,
+    UC1609Font_Mednum = 6,
+}UC1609FONT_e;
+
 void drawPixel(int16_t x, int16_t y, uint16_t color);
 
 void  drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
@@ -53,24 +64,5 @@ void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t b
 
 void drawBitmapBuffer(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t color, uint8_t bgcolor, const unsigned char bitmap[]);
 
-int16_t height(void);
-int16_t width(void);
-
-
-const int16_t
-  WIDTH, HEIGHT;   // This is the 'raw' display w/h - never changes
-int16_t
-  _width, _height, // Display w/h as modified by current rotation
-  cursor_x, cursor_y;
-uint16_t
-  textcolor, textbgcolor;
-uint8_t textsize;
-
-bool wrap; // If set, 'wrap' text at right edge of display
-
-uint8_t _FontNumber = 1;
-uint8_t _CurrentFontWidth = 5;
-uint8_t _CurrentFontoffset = 0;
-uint8_t _CurrentFontheight = 8;
 
 #endif 

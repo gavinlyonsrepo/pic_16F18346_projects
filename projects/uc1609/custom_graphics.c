@@ -1,15 +1,3 @@
-/*
-This is the core graphics library for all ADAFRUIT displays, providing a common
-set of graphics primitives (points, lines, circles, etc.).  It needs to be
-paired with a hardware-specific library for each display device we carry
-(to handle the lower-level functions).
-Adafruit invests time and resources providing this open source code, please
-support Adafruit & open-source hardware by purchasing products from Adafruit!
-Copyright (c) 2013 Adafruit Industries.  All rights reserved.
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-- Redistributions of source code must retain the above copyright notice.
-*/
 
 /*
 * Project Name: ERM19264_UC1609
@@ -22,7 +10,29 @@ modification, are permitted provided that the following conditions are met:
 #include <string.h>
 #include "mcc_generated_files/mcc.h"
 #include "custom_graphics.h"
-#include "custom_graphics_font.h"
+#include "custom_graphics_font.c"
+
+int16_t height(void);
+int16_t width(void);
+
+const int16_t
+  WIDTH, HEIGHT;   // This is the 'raw' display w/h - never changes
+int16_t
+  _width, _height, // Display w/h as modified by current rotation
+  cursor_x, cursor_y;
+uint16_t
+  textcolor, textbgcolor;
+uint8_t textsize;
+
+bool wrap; // If set, 'wrap' text at right edge of display
+
+UC1609FONT_e FontNum;
+
+uint8_t _FontNumber = UC1609Font_Default;
+uint8_t _CurrentFontWidth = 5;
+uint8_t _CurrentFontoffset = 0;
+uint8_t _CurrentFontheight = 8;
+
 
 void custom_graphics_init(int16_t w, int16_t h)
 {
@@ -352,16 +362,16 @@ void drawChar(int16_t x, int16_t y, unsigned char c,
 		{
 			 switch (_FontNumber) {
 #ifdef UC1609_Font_One
-				case 1: line = UC_Font_One[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+				case UC1609Font_Default : line = UC_Font_One[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif 
 #ifdef UC1609_Font_Two
-				case 2: line = UC_Font_Two[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+				case UC1609Font_Thick: line = UC_Font_Two[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
 #ifdef UC1609_Font_Three
-				case 3: line = UC_Font_Three[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+				case UC1609Font_Seven_Seg : line = UC_Font_Three[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
 #ifdef UC1609_Font_Four
-				case 4: line = UC_Font_Four[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+				case  UC1609Font_Wide: line = UC_Font_Four[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
 				default: // wrong font number
 						return;
@@ -513,12 +523,12 @@ void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg
 
 	for (i = 0; i < (_CurrentFontheight*2); i++) 
 	{
-		if (_FontNumber == 5){
+		if (_FontNumber == UC1609Font_Bignum){
 		#ifdef UC1609_Font_Five
 			ctemp = UC_Font_Five[c - _CurrentFontoffset][i];
 		#endif
 		}
-		else if (_FontNumber == 6){
+		else if (_FontNumber == UC1609Font_Mednum){
 		#ifdef UC1609_Font_Six
 			ctemp = UC_Font_Six[c - _CurrentFontoffset][i];
 		#endif
@@ -555,7 +565,7 @@ void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg
 void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t bg) 
 {
 
-	if (_FontNumber < 5)
+	if (_FontNumber < UC1609Font_Bignum)
 	{
 		return;
 	}

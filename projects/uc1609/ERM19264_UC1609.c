@@ -10,6 +10,21 @@
 #include "mcc_generated_files/mcc.h"
 #include "ERM19264_UC1609.h"
 
+// Desc Initilist the Multibuffer struct
+// Param 1 Pointer to a struct
+// Param 2 Point to buffer array data
+// Param 3. width of buffer
+// Param 4. height of buffer
+// Param 5. x offset of buffer
+// Param 6. y offset of buffer
+void LCDinitBuffer(MultiBuffer_t* my_buffer, uint8_t* bitmap, uint8_t w,  uint8_t h, int16_t  x, int16_t y)
+{
+    my_buffer->screenbitmap = bitmap; // point it to the buffer
+    my_buffer->width = w ;
+	my_buffer->height = h;
+	my_buffer->xoffset = x;
+	my_buffer->yoffset = y; 
+}
 
 // Desc: begin Method initialise LCD 
 // Sets pinmodes and SPI setup
@@ -206,15 +221,14 @@ void send_data(uint8_t spiDataByte)
 //Desc: updates the buffer i.e. writes it to the screen
 void  LCDupdate() 
 {
-uint8_t x = 0; uint8_t y = 0; uint8_t w = bufferWidth; uint8_t h = bufferHeight;
-  LCDBuffer( x,  y,  w,  h, (uint8_t*) buffer);
+LCDBuffer(ActiveBuffer->xoffset, ActiveBuffer->yoffset, ActiveBuffer->width, ActiveBuffer->height, (uint8_t*)ActiveBuffer->screenbitmap);
 
 }
 
 //Desc: clears the buffer i.e. does NOT write to the screen
 void  LCDclearBuffer()
 {
-    memset( buffer, 0x00, (bufferWidth * (bufferHeight /8))  ); 
+    memset( ActiveBuffer->screenbitmap, 0x00, (ActiveBuffer->width * (ActiveBuffer->height/ 8))  );
 }
 
 //Desc: Draw a bitmap to the screen
@@ -256,18 +270,18 @@ UC1609_CS_SetHigh;
 void  drawPixel(int16_t x, int16_t y, uint16_t colour) 
 {
     uint8_t temp = 0;
-    if ((x < 0) || (x >= bufferWidth) || (y < 0) || (y >= bufferHeight)) {
+    if ((x < 0) || (x >=ActiveBuffer->width) || (y < 0) || (y >= ActiveBuffer->height)) {
     return;
   }
-      uint16_t tc = (bufferWidth * (y /8)) + x; 
+      uint16_t tc = (ActiveBuffer->width * (y /8)) + x; 
       switch (colour)
       {
         case FOREGROUND: 
             temp =  (1 << (y & 7));   
-            buffer[tc] |= temp; 
+            ActiveBuffer->screenbitmap[tc] |= temp; 
             break;
-        case BACKGROUND:  buffer[tc] &= ~(1 << (y & 7)); break;
-        case INVERSE: buffer[tc] ^= (1 << (y & 7)); break;
+        case BACKGROUND:  ActiveBuffer->screenbitmap[tc] &= ~(1 << (y & 7)); break;
+        case INVERSE: ActiveBuffer->screenbitmap[tc] ^= (1 << (y & 7)); break;
       }
 }
 

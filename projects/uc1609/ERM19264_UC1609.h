@@ -9,7 +9,7 @@
 #ifndef ERM19264_UC1609_H
 #define ERM19264_UC1609_H
 
-#include "custom_graphics_font.h"
+#include "custom_graphics_font.c"
 #include "custom_graphics.h"
 
 // Display Pixel colours   definition
@@ -80,15 +80,23 @@
 #define UC1609_CD_SetLow CD_RA1_SetLow()
 #define UC1609_RST_SetHigh RST_RA5_SetHigh() 
 #define UC1609_RST_SetLow RST_RA5_SetLow() 
-
-// Display  Size
+        
+// Display
 const uint8_t LCD_WIDTH = 192;
 const uint8_t LCD_HEIGHT = 64;
+uint8_t _VbiasPOT; // Contrast default 0x49 datasheet 00-FE
 
-uint8_t* buffer;
-uint8_t bufferWidth =192;
-uint8_t bufferHeight = 64;
+// Buffer
+typedef struct MultiBuffer {
+  uint8_t* screenbitmap; // pointer to buffer
+  uint8_t width;  // bitmap x size
+  uint8_t height; // bitmap y size
+  int16_t xoffset; // x offset
+  int16_t yoffset; // y offset
+}MultiBuffer_t;
 
+MultiBuffer_t* ActiveBuffer;
+   
 void drawPixel(int16_t x, int16_t y, uint16_t colour);
 void LCDupdate(void);
 void LCDclearBuffer(void);
@@ -96,6 +104,7 @@ void LCDBuffer(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t* data);
 
 void LCDbegin(uint8_t);
 void LCDinit(void);
+void LCDinitBuffer(MultiBuffer_t *p, uint8_t* bitmap, uint8_t w,  uint8_t h, int16_t  x, int16_t y); 
 void LCDEnable(uint8_t on);
 void LCDFillScreen(uint8_t pixel, uint8_t mircodelay);
 void LCDFillPage(uint8_t pixels);
@@ -109,6 +118,6 @@ void LCDBitmap(int16_t x, int16_t y, uint8_t w, uint8_t h, const uint8_t* data);
 void send_data(uint8_t spiDataByte);
 void send_command(uint8_t command, uint8_t value);
 
-uint8_t _VbiasPOT; // Contrast default 0x49 datasheet 00-FE
+
 
 #endif

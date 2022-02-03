@@ -1,6 +1,6 @@
 /*
 * Project Name: ERM19264_UC1609
-* File: custom_graphics_font.h
+* File: custom_graphics_font.c
 * Description: ERM19264 LCD driven by UC1609C controller font file 
 * Author: Gavin Lyons.
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
@@ -8,7 +8,7 @@
 
 #ifndef FONTERM19264_H
 #define FONTERM19264_H
-
+#include "mcc_generated_files/mcc.h"
 // **********************************************
 // ****** USER FONT OPTION ONE *************
 // ****** FONT DEFINE SECTION *************** 

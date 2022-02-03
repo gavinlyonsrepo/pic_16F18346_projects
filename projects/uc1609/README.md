@@ -1,46 +1,71 @@
 ![ ERM19264 ](https://github.com/gavinlyonsrepo/ERM19264_UC1609/blob/main/extras/image/color.jpg)
 
-  
+ Table of contents
+---------------------------
+
+  * [Overview](#overview)
+  * [Arduino Library](#arduino-library) 
+  * [Output](#output)
+  * [Bitmap](#bitmap)
+  * [Files](#files)
+ 
 Overview
 --------------------
 * Name : ERM19264_UC1609
 * Title : Library for ERM19264-5 v3 LCD  (UC1609C controller) 
 * Description : 
 
-1. PIC library written in C Xc8 compiler.      
+1. PIC library written in C, Xc8 compiler.      
 2. Inverse, rotate and contrast control. 
 3. ASCII text strings and character text display.
 4. Graphics library included
 5. Sleep mode.
-6. Single Buffer Mode
+6. Multi Buffer Mode
 7. Custom bitmaps supported.
 8. Hardware SPI.
 9. 6 fonts, Size adjustable.
+10. Light weight version available in projects folder  "uc1609_text".
 
+Arduino Library
+------------------------------------------
+
+This library is a truncated port of my Arduino library.
+Lots MORE info and documentation at Arduino Link below.
+
+The main differences between this PIC port and Arduino library is 
+1. PIC port only supports Hardware SPI 
+2. PIC port only has one buffer mode(multi-buffer).
+3. PIC is written  in  C. 
+
+1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
+ 
 
 Output
 ---------------------------------
 
-Output Screenshots, From left to right top to bottom.
+Output Screenshots, From left to right , top to bottom.
 
 1. Full screen bitmap displayed
-2. Multi buffer mode screen divided into two buffers (not available on PIC port)
+2. Multi buffer mode screen divided into two buffers 
 3. Different size and type of fonts 
-4. Available font printed out (this can be expanded by mod see features)
+4. Available font printed out (this can be expanded by mod )
 
 ![op](https://github.com/gavinlyonsrepo/ERM19264_UC1609/blob/main/extras/image/output.jpg)
 
 
-Buffer 
+Bitmaps 
 ----------------------------------
 
-Two  buffer functions :
+Two  bitmaps functions :
 
-1. LCDBitmap() writes bitmap directly to LCD with vertically addressing
-2. drawBitmapBuffer() writes bitmap to software buffer with  horizontally addressing 
+1. LCDBitmap() writes bitmap directly to LCD with vertical addressing
+2. drawBitmapBuffer() writes bitmap to software buffer with  horizontal addressing 
+
 
 Connections
 -----------------------------
+
+Hardware SPI.
 
 1. RA0 - CS
 2. RA1 - CD
@@ -48,12 +73,19 @@ Connections
 4. RB6 - SCLK
 5. RA5 - RST
 
-Arduino Library
-------------------------------------------
+Files
+--------------------------------
 
-Lots more info and documentation at arduino Link.
-This library is a truncated port of arduino library.
-This PIC port  only supports Hardware SPI and only has one buffer mode(singel buffer).
-There is also  light weight basic text only versions available for arduino and PIC at "gavinlyonsrepo" on github.
+| Src Files| Desc |
+| ------ | ------ |
+| ERM19264_UC1609.h | library header file  |
+| ERM19264_UC1609.c |  library  source file  |
+| custom_graphics.h | graphics header file |
+| custom_graphics.c | graphics source file |
+| custom_graphics_font.c |   font  data file |
 
-1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
+| Examples files   | Description | 
+| ------ | ------ | 
+| main.c | Shows use of fonts and graphics, with whole screen as one buffer | 
+|  main_multibuffer.c  | Shows how to divide screen into multiple buffers, this greatly reduces memory usage  |
+
