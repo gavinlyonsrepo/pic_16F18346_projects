@@ -33,14 +33,14 @@ Arduino Library
 This library is a truncated port of my Arduino library.
 Lots MORE info and documentation at Arduino Link below.
 
+Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
+
 The main differences between this PIC port and Arduino library is 
 1. PIC port only supports Hardware SPI 
 2. PIC port only has one buffer mode(multi-buffer).
 3. PIC is written  in  C. 
 4. PIC port does not have the in-built Arduino "print" class. 
 
-1. Arduino C++ [Link](https://github.com/gavinlyonsrepo/ERM19264_UC1609)
- 
 
 Output
 ---------------------------------
@@ -65,7 +65,6 @@ Two  bitmaps functions :
 
 1. LCDBitmap() writes bitmap directly to LCD with vertical addressing
 2. drawBitmapBuffer() writes bitmap to software buffer with  horizontal addressing 
-
 
 Connections
 -----------------------------

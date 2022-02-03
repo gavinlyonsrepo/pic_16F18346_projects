@@ -60,7 +60,6 @@ void Setup(void)
     setTextColor(BACKGROUND, FOREGROUND);
     setTextSize(1);
     setFontNum(UC1609Font_Default);
-    //init the graphics
     custom_graphics_init( myLCDwidth, myLCDheight);
 }
 
@@ -83,8 +82,6 @@ const uint8_t smallImageHa[60] = {
     // Assign address of struct to be the active buffer pointer
     ActiveBuffer = &left_side;
 
-    // Set the Active buffer to Struct.
-    ActiveBuffer = &left_side;
     LCDclearBuffer();
 
     Draw_Shapes();
@@ -94,7 +91,6 @@ const uint8_t smallImageHa[60] = {
 }
 
 // Function to display middle part of screen (Screen is divided three parts/buffers)
-// The middle parts will contain measurements in Volts , Amps and Watts
 void Display_Buffer_Middle(void)
 {
     // Declare a buffer struct
@@ -104,8 +100,6 @@ void Display_Buffer_Middle(void)
     // Assign address of struct to be the active buffer pointer
     ActiveBuffer = &middle_side;
 
-    // Set the Active buffer to Struct.
-    ActiveBuffer = &middle_side;
     LCDclearBuffer();
     
     Draw_Shapes();
@@ -116,7 +110,6 @@ void Display_Buffer_Middle(void)
 
 
 // Function to display RHS of screen (Screen is divided three parts/buffers)
-// The RHS will contain measurements in mV , mA and mW
 void Display_Buffer_Right(void)
 {
     static uint8_t iCount=0;
@@ -129,11 +122,8 @@ void Display_Buffer_Right(void)
     // Assign address of struct to be the active buffer pointer
     ActiveBuffer = &right_side;
 
-    // Set the Active buffer to Struct.
-    ActiveBuffer = &right_side;
     LCDclearBuffer();
 
-    //  Print Text legend for meter
     Draw_Shapes();
     drawText(10, 10, "right ", FOREGROUND, BACKGROUND, 1);
     sprintf(count, "%u", iCount);
