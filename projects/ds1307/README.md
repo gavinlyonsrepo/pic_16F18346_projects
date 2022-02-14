@@ -90,7 +90,6 @@ HD44780 based character LCD displays use 14 wire connections: 8 data lines (D0-D
 and three power lines (Vdd, Vss, Vee). They have two additional connections (LED+ and LED- or A and K).
 In this project, a 4-pin PCF8574 Interface "backpack" board is attached to LCD. It is controlled via the two pin I2C bus.
 Both pins must be held logic high by pull-up resistors.
-The LCD code is in a separate library called "lcd.h".
 The Data is sent in 4-bit mode. The upper nibble holds the data and lower nibble of byte manipulates
 the control bits of LCD(enable and register select). 
 

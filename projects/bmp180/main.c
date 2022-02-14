@@ -12,15 +12,13 @@
 
 /* -------- libraries -------- */
 #include "mcc_generated_files/mcc.h"
-#include "lcd.h" // Custom
+#include "HD44780_I2C_lcd.h" // Custom
 #include "BMP180.h" // Custom
 #include  <stdlib.h> // for printf
 
 /* ----------- Defines -----------*/
 #define INIT_DELAY 1000
 #define DISPLAY_DELAY 5000
-#define LINE_1 1
-#define LINE_2 2
 
 /* -------- Function prototypes -------- */
 void pressure_display(void);
@@ -46,45 +44,44 @@ void main(void)
 /* --------------  Function Space--------------- */
 void Temperature_display(void)
 {
-     lcd_clear(LINE_1);
-     lcd_clear(LINE_2);
+     PCF8574_LCDClearScreen();
      char temp[16];
      float temperature;
      temperature = readTemperature();
      sprintf(temp, "Temp: %.2f C",temperature);
-     lcd_send_cmd (LCD_LINE2);           
-     lcd_send_string(temp);
+     
+     PCF8574_LCDGOTO(1, 0);           
+     PCF8574_LCDSendString(temp);
 }
 
 void pressure_display(void)
 {
-    lcd_clear(LINE_1);
-    lcd_clear(LINE_2);
+    PCF8574_LCDClearScreen();
     char press[16];
+    char outlook[7];
     int32_t pressure;
-
     pressure = readPressure();
     sprintf(press, "Press: %ld Pa", pressure);
-    lcd_send_cmd (LCD_LINE1);
-    lcd_send_string(press);
-    lcd_send_cmd (LCD_LINE2);
+    PCF8574_LCDGOTO(1, 0); 
+    PCF8574_LCDSendString(press);
+    PCF8574_LCDGOTO(2, 0); 
     pressure = (pressure  / 100); // convert to millibar
     if (pressure <= 983) {
-         lcd_send_string( "STORMY");
+         PCF8574_LCDSendString( "STORMY");
         }
         else if (pressure >983 && pressure <998){
-         lcd_send_string( "RAINY");
+         PCF8574_LCDSendString( "RAINY");
         }
          else if (pressure >=998 && pressure <1012){
-         lcd_send_string( "CHANGE");
+         PCF8574_LCDSendString( "CHANGE");
         }
          else if (pressure >=1012 && pressure <1025){
-         lcd_send_string( "FAIR");
+         PCF8574_LCDSendString( "FAIR");
         }
          else if (pressure >=1025){
-         lcd_send_string( "DRY");
+         PCF8574_LCDSendString( "DRY");
         }
- 
+    PCF8574_LCDSendString(outlook);
 }
 
 void Setup(void)
@@ -92,16 +89,15 @@ void Setup(void)
     uint8_t BMPstatus = 0;
     SYSTEM_Initialize();
     __delay_ms(INIT_DELAY);
-    lcd_init();
-    lcd_clear(LINE_1);
-    lcd_clear(LINE_2);
+    PCF8574_LCDInit (CURSOR_ON);
+    PCF8574_LCDClearScreen();
     LED_STATUS_SetHigh();
     BMPstatus = BMP180begin(BMP180_ULTRAHIGHRES);
     if (BMPstatus == 2)
     {
         // Failure to init sensor 
-        lcd_send_cmd (LCD_LINE1);
-        lcd_send_string("Error INIT 2");
+         PCF8574_LCDGOTO(1, 0); 
+        PCF8574_LCDSendString("Error INIT 2");
         __delay_ms(DISPLAY_DELAY);
         while(1);
     }

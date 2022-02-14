@@ -12,7 +12,7 @@
 */
 
 #include "ds1307.h"  
-#include "lcd.h"
+#include "HD44780_I2C_lcd.h" // custom
 #include "Keypad.h"
 #include "mcc_generated_files/mcc.h"
 
@@ -81,7 +81,7 @@ void readClock(void)
         char nameday[4];
         memcpy(&rtc_data,rtc_buff,sizeof(rtc_data));
         
-        lcd_send_cmd (LCD_LINE1);
+        PCF8574_LCDGOTO(1, 0);
         switch (rtc_data.day )
          {
             case 1: strcpy(nameday, "Sun"); break;
@@ -101,9 +101,9 @@ void readClock(void)
                 rtc_data.dateL,
                 nameday
                 );
-        lcd_send_string(print_buffer);
+        PCF8574_LCDSendString(print_buffer);
 
-        lcd_send_cmd (LCD_LINE2);
+         PCF8574_LCDGOTO(2, 0);
         sprintf(print_buffer,"%d%d:%d%d:%d%d",
                 rtc_data.hourH,
                 rtc_data.hourL,
@@ -112,7 +112,7 @@ void readClock(void)
                 rtc_data.secH,
                 rtc_data.secL
                 );
-        lcd_send_string(print_buffer);
+        PCF8574_LCDSendString(print_buffer);
 }
 
 void initClock(void)
