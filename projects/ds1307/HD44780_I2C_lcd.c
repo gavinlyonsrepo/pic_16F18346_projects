@@ -3,11 +3,8 @@
  * Description: 
  * HD44780-based character LCD 16x02 I2C(PCF8574) library source file
  * Author: Gavin Lyons.
- * Complier: xc32 v4.00 compiler
- * PIC: PIC32CM1216CM00032
- * IDE:  MPLAB X v6.00 , Harmony V3
  * Created : Feb 2022
- * Description: See URL for full details.
+ * Description: See URL for full details and test file for library
  * URL: https://github.com/gavinlyonsrepo/pic_32_projects
  */
 
@@ -186,11 +183,13 @@ void PCF8574_LCDGOTO(uint8_t row, uint8_t col) {
     }
 }
 
+
+// Func Desc: Save custom character to CG_RAM
+// Param1: memory location 0-7 in CG Ram
+// Param2: Array of 8 bytes to store custom character
 void PCF8574_LCDCreateCustomChar(uint8_t location, uint8_t * charmap)
 {
-    //location &= 0x08; // we only have 8 locations 0-7
     PCF8574_LCDSendCmd(LCD_CG_RAM | (location<<3));
-    //PCF8574_LCDSendString(charmap);
 	for (uint8_t i=0; i<8; i++) {
 		PCF8574_LCDSendData(charmap[i]);
 	}
@@ -198,7 +197,7 @@ void PCF8574_LCDCreateCustomChar(uint8_t location, uint8_t * charmap)
 
 // Func Desc: Turn LED backlight on and off 
 // Param1: passed bool True = LED on , false = display LED off
-// Note: another command must be issued before takes effect.
+// NOTE: another command must be issued before takes effect.
 void PCF8574_LCDBackLightSet(bool OnOff)
 {
      OnOff ? (LCDBACKLIGHT = LCD_BACKLIGHTON_MASK) : (LCDBACKLIGHT = LCD_BACKLIGHTOFF_MASK);

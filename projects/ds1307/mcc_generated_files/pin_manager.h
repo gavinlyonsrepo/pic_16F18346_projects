@@ -65,6 +65,26 @@
 #define PULL_UP_ENABLED      1
 #define PULL_UP_DISABLED     0
 
+// get/set BUZZER_RA2 aliases
+#define BUZZER_RA2_TRIS                 TRISAbits.TRISA2
+#define BUZZER_RA2_LAT                  LATAbits.LATA2
+#define BUZZER_RA2_PORT                 PORTAbits.RA2
+#define BUZZER_RA2_WPU                  WPUAbits.WPUA2
+#define BUZZER_RA2_OD                   ODCONAbits.ODCA2
+#define BUZZER_RA2_ANS                  ANSELAbits.ANSA2
+#define BUZZER_RA2_SetHigh()            do { LATAbits.LATA2 = 1; } while(0)
+#define BUZZER_RA2_SetLow()             do { LATAbits.LATA2 = 0; } while(0)
+#define BUZZER_RA2_Toggle()             do { LATAbits.LATA2 = ~LATAbits.LATA2; } while(0)
+#define BUZZER_RA2_GetValue()           PORTAbits.RA2
+#define BUZZER_RA2_SetDigitalInput()    do { TRISAbits.TRISA2 = 1; } while(0)
+#define BUZZER_RA2_SetDigitalOutput()   do { TRISAbits.TRISA2 = 0; } while(0)
+#define BUZZER_RA2_SetPullup()          do { WPUAbits.WPUA2 = 1; } while(0)
+#define BUZZER_RA2_ResetPullup()        do { WPUAbits.WPUA2 = 0; } while(0)
+#define BUZZER_RA2_SetPushPull()        do { ODCONAbits.ODCA2 = 0; } while(0)
+#define BUZZER_RA2_SetOpenDrain()       do { ODCONAbits.ODCA2 = 1; } while(0)
+#define BUZZER_RA2_SetAnalogMode()      do { ANSELAbits.ANSA2 = 1; } while(0)
+#define BUZZER_RA2_SetDigitalMode()     do { ANSELAbits.ANSA2 = 0; } while(0)
+
 // get/set LED_RA5 aliases
 #define LED_RA5_TRIS                 TRISAbits.TRISA5
 #define LED_RA5_LAT                  LATAbits.LATA5

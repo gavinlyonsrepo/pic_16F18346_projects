@@ -1,12 +1,8 @@
 /*
 * Project Name: Keypad
 * File: keypad.h
-* Description: library for 4 by 4 matrix keypad
+* Description: library for 4 by 4 matrix keypad green pcb
 * Author: Gavin Lyons.
-* Complier: xc8 v2.10 compiler 
-* IDE:  MPLAB X v5.30
-* Created March 2020
-* URL: github gavinlyonsrepo 
 */
 
 
@@ -17,7 +13,7 @@
 #define KEYPAD_DEBOUNCE 200 // Debounce Delay in mS 
 
 // Function declarations
-char GetKey(void);
-char ReadKeys(void);
+char KeypadGetKey(void);
+char KeyPadReadKeys(void);
 
 #endif

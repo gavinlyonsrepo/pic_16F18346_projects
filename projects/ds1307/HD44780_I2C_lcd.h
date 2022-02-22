@@ -1,15 +1,3 @@
-/*
-* File: HD44780_I2C_lcd.h
-* Description: 
- * HD44780-based character LCD 16x02 I2C(PCF8574) library header file
-* Author: Gavin Lyons.
-* Complier: xc32 v4.00 compiler
-* PIC: PIC32CM1216CM00032
-* IDE:  MPLAB X v6.00 , Harmony V3
-* Created : Feb 2022
-* Description: See URL for full details.
-* URL: https://github.com/gavinlyonsrepo/pic_32_projects
-*/
 
 #include <stdint.h>
 #include <stdbool.h>

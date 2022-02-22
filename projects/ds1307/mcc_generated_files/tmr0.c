@@ -51,7 +51,7 @@
 #include <xc.h>
 #include "tmr0.h"
 #include "mcc.h"
-
+#include "../RTC_DS1307.h"
 /**
   Section: TMR0 APIs
 */
@@ -62,11 +62,11 @@ void TMR0_Initialize(void)
 {
     // Set TMR0 to the options selected in the User Interface
 
-    // T0CS FOSC/4; T0CKPS 1:1024; T0ASYNC synchronised; 
-    T0CON1 = 0x4A;
+    // T0CS FOSC/4; T0CKPS 1:8; T0ASYNC synchronised; 
+    T0CON1 = 0x43;
 
-    // TMR0H 14; 
-    TMR0H = 0x0E;
+    // TMR0H 255; 
+    TMR0H = 0xFF;
 
     // TMR0L 0; 
     TMR0L = 0x00;
@@ -80,8 +80,8 @@ void TMR0_Initialize(void)
     // Set Default Interrupt Handler
     TMR0_SetInterruptHandler(TMR0_DefaultInterruptHandler);
 
-    // T0OUTPS 1:16; T0EN enabled; T016BIT 8-bit; 
-    T0CON0 = 0x8F;
+    // T0OUTPS 1:1; T0EN enabled; T016BIT 8-bit; 
+    T0CON0 = 0x80;
 }
 
 void TMR0_StartTimer(void)
@@ -118,19 +118,6 @@ void TMR0_Reload(uint8_t periodVal)
    TMR0H = periodVal;
 }
 
-void TMR0_ISR(void)
-{
-    // clear the TMR0 interrupt flag
-    PIR0bits.TMR0IF = 0;
-    if(TMR0_InterruptHandler)
-    {
-        TMR0_InterruptHandler();
-    }
-
-    // add your TMR0 interrupt custom code , glyons
-    readClock();
-    LED_RA5_Toggle();
-}
 
 
 void TMR0_SetInterruptHandler(void (* InterruptHandler)(void)){

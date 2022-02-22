@@ -17,7 +17,7 @@ Each Project is the relevant sub folder at url link. All code is written in C (x
 | --- | --- | --- |
 | 1 | DHT22 sensor data displayed on SSD1306 OLED I2C (Graphics Library)  | [URL](projects/oled_dht22_graph) |
 | 2 |  DHT22 sensor data displayed on Seven Segment (ASCII text Library)  | [URL](projects/7seg_dht22) |
-| 3 |  DS1307 RTC Real time clock project | [URL](projects/ds1307) |
+| 3 |  DS1307 RTC Alarm clock project | [URL](projects/ds1307) |
 | 4 |  BMP180 pressure sensor project | [URL](projects/bmp180) |
 | 5 |  Library for ERM19264 UC1609C LCD, HW SPI, text + graphics | [URL](projects/uc1609) |
 | 6 |  Library for TFT, 1.44" SPI ST7735, Red PCB, module  | [URL](projects/ST7735) |
