@@ -5,7 +5,7 @@
  * Author: Gavin Lyons.
  * Complier: xc8 v2.10 compiler
  * PIC: PIC16F18346
- * IDE:  MPLAB X v5.30
+ * IDE:  MPLAB X v 6.00
  * Created Sep 2020
  * Description: See URL for full details.
  * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
@@ -26,6 +26,7 @@ void Setup(void);
 void Test0(void); // Print out all five fonts, fonts must be enabled in header file for this to work
 void Test1A(void); // defined 16-bit Colors, text
 void Test1B(void); // print entire ASCII font 32 to 127
+void Test1C(void); // inverted text
 void Test2(void); // font sizes + character draw
 void Test3(void); // pixels and lines
 void Test4(void); // rectangles 
@@ -38,35 +39,34 @@ void Test10(void); // change modes test
 void Test11(void); // custom char/icon  byte tall
 void Test12(void); // two color bitmap
 
+void EndTest(void);
+
 // ************  Main application ***************
 
 void main(void) 
 {
     Setup();
+    
+    Test0();
+    Test1A();
+    Test1B();
+    Test1C();
+    Test2();
+    Test3();
+    Test4();
+    Test5();
+    Test6();
+    Test7();
+    Test8();
+    Test9();
+    Test10();
+    Test11();
+    Test12();
+    
+    EndTest();
 
-    while (1) 
-    {
-        Test0();
-        Test1A();
-        Test1B();
-        Test2();
-        Test3();
-        Test4();
-        Test5();
-        Test6();
-        Test7();
-        Test8();
-        Test9();
-        Test10();
-        Test11();
-        Test12();
-        
-        fillScreen(ST7735_BLACK);
-        drawText(5, 50, "Tests over", ST7735_GREEN, ST7735_BLACK, 2);
-        while (1);
-    }
-}
-// ********* End OF main ********
+} // ********* End OF main ********
+
 
 
 // ******** Function Space *************
@@ -76,69 +76,72 @@ void main(void)
 void Setup(void) 
 {
     SYSTEM_Initialize();
-    __delay_ms(TEST_DELAY2);
-
-#ifdef TFT_PCB_RED
-    TFT_RedTab_Initialize();
-#endif
-#ifdef TFT_PCB_GREEN
-    TFT_GreenTab_Initialize();
-#endif
-#ifdef TFT_PCB_BLACK
-    TFT_BlackTab_Initialize();
-#endif
-#ifdef  TFT_PCB_GENERIC
-    TFT_ST7735B_Initialize();
-#endif
-
-    setTextWrap(true);
-    TFTFontNum(1);
     __delay_ms(TEST_DELAY1);
-    fillScreen(ST7735_BLACK);
+    
+ // ****** USER OPTION 1 Screen Setup ******  
+	uint8_t OFFSET_COL = 0;  // 2, These offsets can be adjusted for any issues->
+	uint8_t OFFSET_ROW = 0 ; // 3, with manufacture tolerance/defects
+	uint16_t TFT_PIXEL_WIDTH = 128;// Screen width in pixels
+	uint16_t TFT_PIXEL_HEIGHT = 128; // Screen height in pixels
+    
+	TFTInitScreenSize(OFFSET_COL, OFFSET_ROW , TFT_PIXEL_WIDTH  , TFT_PIXEL_HEIGHT);
+    
+// ******** USER OPTION 2 PCB_TYPE **************************
+// init PCB type , pass enum 4 choices, see readme
+	TFTInitPCBType(TFT_ST7735R_Red);
+//**********************************************************
+
+    TFTFontNum(TFTFont_Default);
+    TFTfillScreen(ST7735_BLACK);
 }
 
-
+void EndTest(void)
+{
+    TFTfillScreen(ST7735_BLACK);
+    TFTdrawText(5, 50, "Tests over", ST7735_GREEN, ST7735_BLACK, 2);
+    while (1);
+}
 
 void Test0(void) {
 
-    TFTFontNum(1);
-    drawText(0, 5, "Default 1", ST7735_WHITE, ST7735_BLACK, 2);
-    TFTFontNum(2);
-    drawText(0, 25, "THICK 2", ST7735_GREEN, ST7735_BLACK, 2);
-    TFTFontNum(3);
-    drawText(0, 45, "Seven 3", ST7735_BLUE, ST7735_BLACK, 2);
-    TFTFontNum(4);
-    drawText(0, 65, "WIDE 4", ST7735_CYAN, ST7735_BLACK, 2);
-    TFTFontNum(5);
-    drawText(0, 85, "Tiny 5", ST7735_TAN, ST7735_BLACK, 2);
+    TFTFontNum(TFTFont_Default);
+    TFTdrawText(0, 5, "Default 1", ST7735_WHITE, ST7735_BLACK, 2);
+    TFTFontNum(TFTFont_Thick);
+    TFTdrawText(0, 25, "THICK 2", ST7735_GREEN, ST7735_BLACK, 2);
+    TFTFontNum(TFTFont_Seven_Seg);
+    TFTdrawText(0, 45, "Seven 3", ST7735_BLUE, ST7735_BLACK, 2);
+    TFTFontNum(TFTFont_Wide);
+    TFTdrawText(0, 65, "WIDE 4", ST7735_CYAN, ST7735_BLACK, 2);
+    TFTFontNum(TFTFont_Tiny);
+    TFTdrawText(0, 85, "Tiny 5", ST7735_TAN, ST7735_BLACK, 2);
     __delay_ms(TEST_DELAY5);
-    fillScreen(ST7735_BLACK);
-     TFTFontNum(1);
+    TFTfillScreen(ST7735_BLACK);
+     TFTFontNum(TFTFont_Default);
 }
 
 void Test1A(void) {
     char *txt = "WHITE";
-    drawText(0, 5, txt, ST7735_WHITE, ST7735_BLACK, 1);
-    drawText(0, 15, "BLUE", ST7735_BLUE, ST7735_BLACK, 1);
-    drawText(0, 25, "RED", ST7735_RED, ST7735_BLACK, 1);
-    drawText(0, 35, "GREEN", ST7735_GREEN, ST7735_BLACK, 1);
-    drawText(0, 45, "CYAN", ST7735_CYAN, ST7735_BLACK, 1);
-    drawText(0, 55, "MAGENTA", ST7735_MAGENTA, ST7735_BLACK, 1);
-    drawText(0, 65, "YELLOW", ST7735_YELLOW, ST7735_BLACK, 1);
-    drawText(0, 75, txt, ST7735_WHITE, ST7735_BLACK, 1);
-    drawText(0, 85, "GREY", ST7735_GREY, ST7735_BLACK, 1);
-    drawText(0, 95, "TAN", ST7735_TAN, ST7735_BLACK, 1);
-    drawText(0, 105, "BROWN", ST7735_BROWN, ST7735_BLACK, 1);
+    TFTdrawText(0, 5, txt, ST7735_WHITE, ST7735_BLACK, 1);
+    TFTdrawText(0, 15, "BLUE", ST7735_BLUE, ST7735_BLACK, 1);
+    TFTdrawText(0, 25, "RED", ST7735_RED, ST7735_BLACK, 1);
+    TFTdrawText(0, 35, "GREEN", ST7735_GREEN, ST7735_BLACK, 1);
+    TFTdrawText(0, 45, "CYAN", ST7735_CYAN, ST7735_BLACK, 1);
+    TFTdrawText(0, 55, "MAGENTA", ST7735_MAGENTA, ST7735_BLACK, 1);
+    TFTdrawText(0, 65, "YELLOW", ST7735_YELLOW, ST7735_BLACK, 1);
+    TFTdrawText(0, 75, txt, ST7735_WHITE, ST7735_BLACK, 1);
+    TFTdrawText(0, 85, "GREY", ST7735_GREY, ST7735_BLACK, 1);
+    TFTdrawText(0, 95, "TAN", ST7735_TAN, ST7735_BLACK, 1);
+    TFTdrawText(0, 105, "BROWN", ST7735_BROWN, ST7735_BLACK, 1);
     __delay_ms(TEST_DELAY2);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 void Test1B(void) {
     uint8_t row = 20;
     uint8_t col = 0;
-    for (char i = TFT_ASCII_OFFSET; i < 126; i++) {
-        drawChar(col, row, i, ST7735_GREEN, ST7735_BLACK, 1);
-        col += _CurrentFontWidth + 2;
+    for (char i = 0x20; i < 126; i++) {
+        TFTdrawChar(col, row, i, ST7735_GREEN, ST7735_BLACK, 1);
+        col += 10;
         if (col > 100) {
             row += 10;
             col = 0;
@@ -147,56 +150,72 @@ void Test1B(void) {
     }
 
     __delay_ms(TEST_DELAY5);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
+
+
+void Test1C(void)
+{
+     // Draw a rectangle before text to hide  padding gaps(or fill screen)
+    TFTfillRect(0, 4, 100, 17, ST7735_YELLOW); 
+    TFTdrawText(0, 5, "Invert 1", ST7735_RED, ST7735_YELLOW, 2);
+    // Draw a rectangle to hide padding gaps(or fill screen)
+    TFTfillRect(0, 24, 100, 17, ST7735_WHITE); 
+    TFTdrawText(0, 25, "Invert 2", ST7735_BLACK, ST7735_WHITE, 2);
+        __delay_ms(TEST_DELAY5);
+    TFTfillScreen(ST7735_BLACK);
+
+}
+    
+    
 
 void Test2(void) {
     char *txttwo = "TEST";
-    drawText(0, 5, txttwo, ST7735_WHITE, ST7735_BLACK, 2);
-    drawText(0, 25, txttwo, ST7735_WHITE, ST7735_BLACK, 3);
-    drawText(0, 55, txttwo, ST7735_WHITE, ST7735_BLACK, 4);
-    drawChar(0, 85, 'G', ST7735_WHITE, ST7735_BLACK, 5);
-    drawChar(45, 85, 'L', ST7735_WHITE, ST7735_BLACK, 5);
+    TFTdrawText(0, 5, txttwo, ST7735_WHITE, ST7735_BLACK, 2);
+    TFTdrawText(0, 25, txttwo, ST7735_WHITE, ST7735_BLACK, 3);
+    TFTdrawText(0, 55, txttwo, ST7735_WHITE, ST7735_BLACK, 4);
+    TFTdrawChar(0, 85, 'G', ST7735_WHITE, ST7735_BLACK, 5);
+    TFTdrawChar(45, 85, 'L', ST7735_WHITE, ST7735_BLACK, 5);
 
     __delay_ms(TEST_DELAY2);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 void Test3(void)  
 {
-    drawPixel(85, 5, ST7735_WHITE);
-    drawPixel(87, 7, ST7735_WHITE);
-    drawPixel(89, 9, ST7735_WHITE);
-    drawLine(10, 10, 30, 30, ST7735_RED);
-    drawFastVLine(40, 40, 40, ST7735_GREEN);
-    drawFastHLine(60, 60, 40, ST7735_YELLOW);
+    TFTdrawPixel(85, 5, ST7735_WHITE);
+    TFTdrawPixel(87, 7, ST7735_WHITE);
+    TFTdrawPixel(89, 9, ST7735_WHITE);
+    TFTdrawLine(10, 10, 30, 30, ST7735_RED);
+    TFTdrawFastVLine(40, 40, 40, ST7735_GREEN);
+    TFTdrawFastHLine(60, 60, 40, ST7735_YELLOW);
 
     __delay_ms(TEST_DELAY2);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 void Test4(void) {
-    drawRectWH(5, 5, 20, 20, ST7735_RED);
-    fillRectangle(45, 5, 20, 20, ST7735_YELLOW);
-    fillRect(85, 5, 20, 20, ST7735_GREEN);
-    drawRoundRect(15, 60, 50, 50, 5, ST7735_CYAN);
-    fillRoundRect(70, 60, 50, 50, 10, ST7735_WHITE);
+    TFTdrawRectWH(5, 5, 20, 20, ST7735_RED);
+    TFTfillRectangle(45, 5, 20, 20, ST7735_YELLOW);
+    TFTfillRect(85, 5, 20, 20, ST7735_GREEN);
+    TFTdrawRoundRect(15, 60, 50, 50, 5, ST7735_CYAN);
+    TFTfillRoundRect(70, 60, 50, 50, 10, ST7735_WHITE);
 
     __delay_ms(TEST_DELAY2);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 void Test5(void) {
-    drawCircle(40, 20, 15, ST7735_GREEN);
-    fillCircle(80, 20, 15, ST7735_YELLOW);
+    TFTdrawCircle(40, 20, 15, ST7735_GREEN);
+    TFTfillCircle(80, 20, 15, ST7735_YELLOW);
 }
 
 void Test6(void) {
-    drawTriangle(5, 80, 50, 40, 95, 80, ST7735_CYAN);
-    fillTriangle(55, 120, 100, 90, 127, 120, ST7735_RED);
+    TFTdrawTriangle(5, 80, 50, 40, 95, 80, ST7735_CYAN);
+    TFTfillTriangle(55, 120, 100, 90, 127, 120, ST7735_RED);
 
     __delay_ms(TEST_DELAY2);
-    fillScreen(ST7735_BLACK);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 
@@ -206,99 +225,99 @@ void Test7(void)
   
   for (uint8_t i = 0; i < LINES; i++)
   {
-    drawText(0, LINE_OFFSET+i*LINE_SIZE,"Scroll test", ST7735_WHITE, ST7735_BLACK, 1);
+    TFTdrawText(0, LINE_OFFSET+i*LINE_SIZE,"Scroll test", ST7735_WHITE, ST7735_BLACK, 1);
   }
-  setScrollDefinition(TOP_FIXED,BOTTOM_FIXED,1);  // bottom-to-top
+  TFTsetScrollDefinition(TOP_FIXED,BOTTOM_FIXED,1);  // bottom-to-top
   uint8_t pos = LINE_OFFSET;
   for (uint8_t i = 0; i < LINES; i++) 
   {
     for (uint8_t j = 0; j < LINE_SIZE; j++) 
     {
-      VerticalScroll(pos + TOP_FIXED);
+      TFTVerticalScroll(pos + TOP_FIXED);
       pos++;
       // check pos if necessary: must be < tft_height - TOP_FIXED - BOTTOM_FIXED
       __delay_ms(100);  
     }
     __delay_ms(TEST_DELAY2);
   }
-  changeMode(NORMAL); 
-  fillScreen(ST7735_BLACK);
+  TFTchangeMode(ST7735_modes_Normal); 
+  TFTfillScreen(ST7735_BLACK);
 }
 
 void Test8() 
 {
     //Draw play button 
-    fillRoundRect(25, 10, 78, 60, 8, ST7735_WHITE);
-    fillTriangle(42, 20, 42, 60, 90, 40, ST7735_RED);
-    drawText(5, 80, "Press Play", ST7735_GREEN, ST7735_BLACK, 2);
+    TFTfillRoundRect(25, 10, 78, 60, 8, ST7735_WHITE);
+    TFTfillTriangle(42, 20, 42, 60, 90, 40, ST7735_RED);
+    TFTdrawText(5, 80, "Press Play", ST7735_GREEN, ST7735_BLACK, 2);
     __delay_ms(TEST_DELAY5);
     
     // change play color
-    fillTriangle(42, 20, 42, 60, 90, 40, ST7735_BLUE);
+    TFTfillTriangle(42, 20, 42, 60, 90, 40, ST7735_BLUE);
     __delay_ms(TEST_DELAY1);
     // change play color
-    fillTriangle(42, 20, 42, 60, 90, 40, ST7735_GREEN);
+    TFTfillTriangle(42, 20, 42, 60, 90, 40, ST7735_GREEN);
     __delay_ms(TEST_DELAY1);
 }
 
 void Test9()
 {
-    fillScreen(ST7735_BLACK);
-    setRotation(0);
-    drawText(20, 20, "Rotate 0", ST7735_GREEN, ST7735_BLACK, 1);
+    TFTfillScreen(ST7735_BLACK);
+    TFTsetRotation(ST7735_Degrees_0);
+    TFTdrawText(20, 20, "Rotate 0", ST7735_RED, ST7735_BLACK, 1);
+    __delay_ms(TEST_DELAY5);
+
+    TFTfillScreen(ST7735_BLACK);
+    TFTsetRotation(ST7735_Degrees_90);
+    TFTdrawText(20, 20, "Rotate 90", ST7735_RED, ST7735_BLACK, 1);
     __delay_ms(TEST_DELAY5);
     
-    fillScreen(ST7735_BLACK);
-    setRotation(1);
-    drawText(20, 20, "Rotate 1", ST7735_GREEN, ST7735_BLACK, 1);
+    TFTfillScreen(ST7735_BLACK);
+    TFTsetRotation(ST7735_Degrees_180);
+    TFTdrawText(20, 20, "Rotate 180", ST7735_RED, ST7735_BLACK, 1);
     __delay_ms(TEST_DELAY5);
     
-    fillScreen(ST7735_BLACK);
-    setRotation(2);
-    drawText(20, 20, "Rotate 2", ST7735_GREEN, ST7735_BLACK, 1);
+    TFTfillScreen(ST7735_BLACK);
+    TFTsetRotation(ST7735_Degrees_270);
+    TFTdrawText(20, 20, "Rotate 270", ST7735_RED, ST7735_BLACK, 1);
     __delay_ms(TEST_DELAY5);
     
-    fillScreen(ST7735_BLACK);
-    setRotation(3);
-    drawText(20, 20, "Rotate 3", ST7735_GREEN, ST7735_BLACK, 1);
-    __delay_ms(TEST_DELAY5);
-    
-    setRotation(0);
-    changeMode(NORMAL);
-    fillScreen(ST7735_BLACK);
+    TFTsetRotation(ST7735_Degrees_0);
+    TFTchangeMode(ST7735_modes_Normal);
+    TFTfillScreen(ST7735_BLACK);
 }
 
 void Test10()
 {
-    fillRoundRect(25, 10, 78, 60, 8, ST7735_YELLOW);
-    drawText(30, 80, "Mode test", ST7735_WHITE, ST7735_RED, 1);
+    TFTfillRoundRect(25, 10, 78, 60, 8, ST7735_YELLOW);
+    TFTdrawText(30, 80, "Mode test", ST7735_WHITE, ST7735_RED, 1);
     __delay_ms(TEST_DELAY2);
-     changeMode(NORMAL);
+     TFTchangeMode(ST7735_modes_Normal);
      __delay_ms(TEST_DELAY2);
-     changeMode(INVERT);
+     TFTchangeMode(ST7735_modes_Invert);
      __delay_ms(TEST_DELAY5);
-     changeMode(NORMAL);
+     TFTchangeMode(ST7735_modes_Normal);
      __delay_ms(TEST_DELAY2);
-     changeMode(DISP_OFF);
+     TFTchangeMode(ST7735_modes_DisplayOff);
      __delay_ms(TEST_DELAY5);
-     changeMode(DISP_ON);
+     TFTchangeMode(ST7735_modes_DisplayOn);
      __delay_ms(TEST_DELAY2);
-     changeMode(SLEEP);
+     TFTchangeMode(ST7735_modes_Sleep);
      __delay_ms(TEST_DELAY5);
-     changeMode(NORMAL);
+     TFTchangeMode(ST7735_modes_Normal);
 }
 
 void Test11(void)
 {
-    fillScreen(ST7735_BLACK);
-    //power icon ,  vertical addressed
+    TFTfillScreen(ST7735_BLACK);
+    //power icon
     const unsigned char power[12] = {0xff, 0xe7, 0xc3, 0x99, 0xa5, 0xad, 0xad, 0xa5, 0x99, 0xc3, 0xe7, 0xff};
-    //lighting symbol ,  vertical addressed
+    //lighting symbol
     const unsigned char myspeed[12] = {0xff, 0xff, 0xf7, 0xb3, 0xd1, 0xc0, 0xe0, 0xf4, 0xf6, 0xfe, 0xff, 0xff}; 
     
-    drawIcon(10, 20, 12, ST7735_WHITE , ST7735_BLACK,power);
-    drawIcon(10, 50, 12, ST7735_RED, ST7735_YELLOW, myspeed);
-    drawText(0, 90, "Custom chars", ST7735_BLUE, ST7735_BLACK, 1);
+    TFTdrawIcon(10, 20, 12, ST7735_WHITE , ST7735_BLACK,power);
+    TFTdrawIcon(10, 50, 12, ST7735_RED, ST7735_YELLOW, myspeed);
+    TFTdrawText(0, 90, "Custom chars", ST7735_BLUE, ST7735_BLACK, 1);
       __delay_ms(TEST_DELAY5);
       
 }
@@ -306,7 +325,7 @@ void Test11(void)
 void Test12(void)
 {
 // 'backupicon', 128x128px , icon from https://github.com/gavinlyonsrepo/backupmenu
-// 128 * (128/8) = 2048 // fullscreen bitmap bi-colour horizontally addressed
+// 128 * (128/8) = 2048 // fullscreen bitmap bi-colour
 const unsigned char mybitmap[2048] = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -438,7 +457,7 @@ const unsigned char mybitmap[2048] = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-drawBitmap(0, 0, _width , _height, ST7735_WHITE , ST7735_GREEN, mybitmap);
+TFTdrawBitmap(0, 0, 128 , 128, ST7735_WHITE , ST7735_GREEN, mybitmap);
 
  __delay_ms(TEST_DELAY5);
 }

@@ -8,7 +8,7 @@ Library for TFT SPI LCD, ST7735 Driver, RED PCB v1.1, 1.44'', 128 x 128 pixels. 
 * Complier : XC8: 2.10
 * MCC version: 3.95
 * PIC: PIC16F18346
-* IDE:  MPLAB X v5.30
+* IDE:  MPLAB X v6.00
 * Credits:  
 Based onCCS C compiler Library by [ simple-circuits](https://simple-circuit.com/st7735-tft-library-ccs-c-compiler/)  , 
 Arduino built-in TFT library and some code from github user [bablokb](https://github.com/bablokb/pic-st7735)
@@ -22,8 +22,12 @@ Features
  
 This Color TFT LCD display has 128 x 128 resolution.
 It uses SPI interface to communicate with controller. Onboard LDO, support 5V/3.3V input voltage, 
-the LED backlight, 3.3V input. Size 1.44 inch, visual area 1.1 inch. Version 1.1. No SD Card. 
+the LED backlight, 3.3V input. Size 1.44 inch, visual area 1.1 inch. Version 1.1. No SD Card.
 Backlight control is left to user.
+
+**Screen Size settings**
+
+In the setup() function in USER OPTION 1 Screen Setup. Select your PCB size and offsets. User can adjust pixel height, pixel width and screen offsets in the header file. When calling function TFTInitScreenSize(OFFSET_COL, OFFSET_ROW , TFT_PIXEL_WIDTH  , TFT_PIXEL_HEIGHT).
 
 **PCB Version**
 
@@ -36,27 +40,20 @@ There are 4 types of the ST7735 TFT display supported.
 
 Only red tab has been tested here. 
 It should work on other TFT displays using the different init functions, but not tested.
-In the header file in USER OPTION 1 PCB_TYPE select your PCB.
-default is Red tab.  User can adjust pixel height, pixel width and screen offsets in the header file. 
+User picks the one they want when calling TFTInitPCBType() function
+See USER OPTION 2 PCB_TYPE in Setup() function in main.c
+
+| Number | Description | Enum label|
+| ---- | ---- | --- | 
+| 1 | ST7735B controller| TFT_ST7735B |
+| 2 | ST7735R Green Tab | TFT_ST7735R_Green |
+| 3 | ST7735R Red Tab   | TFT_ST7735R_Red |
+| 4 | ST7735S Black Tab | TFT_ST7735S_Black |
  
-**SPI**
-
-This library supports both Hardware SPI and software SPI. Change the define a top of header file
-to switch between the two. USER OPTION 3 SPI TYPE. 
-Tested at 8,000,000 MHZ SPI clock. 
-
-**Files**
-
-The Main.c contains 12 tests showing library functions
-The code generated using the MCC is in a folder called mcc_generated_files. 
-The SPI routine's are in here.
-There is also an TFT library (ST7735_TFT.c and ST7735_TFT.h),
-and five fonts file that contains ASCII pixel fonts.
-
 **Fonts**
 
 Font one is included by default to include other font files see
-USER OPTION 2 FONT  at start of header file.
+USER OPTION 3 FONT  at start of header file.
 
 Five fonts available : 
 
@@ -67,6 +64,19 @@ Five fonts available :
 | 3 | Seven segment | 4x8 | ------ |
 | 4 | Wide | 8x8 | no lowercase letters |
 | 5 | Tiny | 3x8 |  ------ |
+ 
+**SPI**
+
+This library supports both Hardware SPI and software SPI. Comment the define a top of header file to switch between the two. see USER OPTION 4 SPI TYPE. 
+Tested at 8,000,000 MHZ SPI clock. 
+
+**Files**
+
+The Main.c contains  tests showing library functions
+The code generated using the MCC is in a folder called mcc_generated_files. 
+The SPI routine's are in here.
+There is also an TFT library (ST7735_TFT.c and ST7735_TFT.h),
+and five fonts file that contains ASCII pixel fonts.
 
 **Bitmap**
 
