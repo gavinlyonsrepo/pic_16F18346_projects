@@ -107,8 +107,6 @@ void TFT_GreenTab_Initialize() {
     TFT_Rcmd1();
     TFT_Rcmd2green();
     TFT_Rcmd3();
-    _TFTcolstart = 2;
-    _TFTrowstart = 1;
     _TFTType = TFT_ST7735R_Green;
 }
 
