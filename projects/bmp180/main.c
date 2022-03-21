@@ -45,13 +45,13 @@ void main(void)
 void Temperature_display(void)
 {
      PCF8574_LCDClearScreen();
-     char temp[16];
+     char tempStr[16];
      float temperature;
      temperature = readTemperature();
-     sprintf(temp, "Temp: %.2f C",temperature);
+     sprintf(tempStr, "Temp: %.2f C",temperature);
      
-     PCF8574_LCDGOTO(1, 0);           
-     PCF8574_LCDSendString(temp);
+     PCF8574_LCDGOTO(LCDLineNumberOne, 0);           
+     PCF8574_LCDSendString(tempStr);
 }
 
 void pressure_display(void)
@@ -62,9 +62,9 @@ void pressure_display(void)
     int32_t pressure;
     pressure = readPressure();
     sprintf(press, "Press: %ld Pa", pressure);
-    PCF8574_LCDGOTO(1, 0); 
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0); 
     PCF8574_LCDSendString(press);
-    PCF8574_LCDGOTO(2, 0); 
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0); 
     pressure = (pressure  / 100); // convert to millibar
     if (pressure <= 983) {
          PCF8574_LCDSendString( "STORMY");
@@ -89,14 +89,14 @@ void Setup(void)
     uint8_t BMPstatus = 0;
     SYSTEM_Initialize();
     __delay_ms(INIT_DELAY);
-    PCF8574_LCDInit (CURSOR_ON);
+    PCF8574_LCDInit(LCDCursorTypeOn, 2, 16, 0x27);
     PCF8574_LCDClearScreen();
     LED_STATUS_SetHigh();
     BMPstatus = BMP180begin(BMP180_ULTRAHIGHRES);
     if (BMPstatus == 2)
     {
         // Failure to init sensor 
-         PCF8574_LCDGOTO(1, 0); 
+        PCF8574_LCDGOTO(LCDLineNumberOne, 0); 
         PCF8574_LCDSendString("Error INIT 2");
         __delay_ms(DISPLAY_DELAY);
         while(1);

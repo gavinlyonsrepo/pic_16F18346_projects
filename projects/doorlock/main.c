@@ -87,8 +87,8 @@ void Setup(void) {
     LED_RA5_SetHigh();
 
     __delay_ms(LCD_INIT_DELAY);
-    PCF8574_LCDInit(CURSOR_ON);
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDInit(LCDCursorTypeOn, 2, 16, 0x27);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Password Entry");
     __delay_ms(LCD_DISPLAY_DELAY);
 
@@ -101,9 +101,9 @@ void Setup(void) {
 
 void LCDRedraw(void) {
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Code 6 digits:");
-    PCF8574_LCDGOTO(2, 0);
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0);
 }
 
 //Function to lock the door 
@@ -135,7 +135,7 @@ void RightGuess(void) {
     __delay_ms(LCD_DISPLAY_DELAY);
 
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Press C to lock");
     __delay_ms(LCD_DISPLAY_DELAY);
 
@@ -162,9 +162,9 @@ void ChangePassword(void) {
 
     // 1. Prompt for Password change code
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Change Code");
-    PCF8574_LCDGOTO(2, 0);
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0);
 
     while (i<10) {
         i = 3;
@@ -188,9 +188,9 @@ void ChangePassword(void) {
     // 2. Read in new password
     myKeyPress = 'n';
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("New Password");
-    PCF8574_LCDGOTO(2, 0);
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0);
     i = 0;
     while (i < 6) {
         myKeyPress = KeypadGetKey(); // Scan for key

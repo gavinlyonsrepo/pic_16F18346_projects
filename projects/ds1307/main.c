@@ -88,7 +88,7 @@ void ScanKeyPad(void) {
             break;
         case 'E': BackLight(); //turn backlight on and off
             break;
-        case 'F': PCF8574_LCDResetScreen(CURSOR_ON); // reset LCD
+        case 'F': PCF8574_LCDResetScreen(LCDCursorTypeOn); // reset LCD
             break;
         case '0':
         {
@@ -116,21 +116,21 @@ void SetAlarmText(char* timeBuf) {
     char AlarmPrintBuffer[6] = {0};
     uint8_t count = 0; 
     if (alarmOn == true) {
-        PCF8574_LCDGOTO(2, 10);
-        PCF8574_LCDSendData(0); //print custom char bell icon
+        PCF8574_LCDGOTO(LCDLineNumberTwo, 10);
+        PCF8574_LCDPrintCustomChar(0); // Print bell custom char 
         sprintf(AlarmPrintBuffer, "%c%c:%c%c", alarmTime[0], alarmTime[1], alarmTime[2], alarmTime[3]);
         PCF8574_LCDSendString(AlarmPrintBuffer);
-        PCF8574_LCDGOTO(2, 9);
+        PCF8574_LCDGOTO(LCDLineNumberTwo, 9);
         for(uint8_t index = 0; index < 4; index++){
             if(timeBuf[index] == alarmTime[index]) count++;
         }
         if (count ==4)  BUZZER_RA2_SetHigh(); //alarm on 
      } else {
-        PCF8574_LCDGOTO(2, 10);
+        PCF8574_LCDGOTO(LCDLineNumberTwo, 10);
         for (uint8_t blankSpace = 0; blankSpace < 6; blankSpace++) {
             PCF8574_LCDSendChar(' ');
         }
-        PCF8574_LCDGOTO(2, 8);
+        PCF8574_LCDGOTO(LCDLineNumberTwo, 8);
     }
 }
 
@@ -146,9 +146,9 @@ void SetAlarm(void) {
     char keyPressed = 'n';
     LED_RA5_SetHigh();
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("HHMM - Set Alarm");
-    PCF8574_LCDGOTO(2, 0);
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0);
     while (userDataInputLength < 4) {
         keyPressed = KeypadGetKey();
         
@@ -160,9 +160,9 @@ void SetAlarm(void) {
         }
     }
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Alarm Set! ");
-    PCF8574_LCDSendData(0); // Print bell custom char
+    PCF8574_LCDPrintCustomChar(0); // Print bell custom char 
     alarmOn = true;
     __delay_ms(MSG_SHOW_DELAY);
     LED_RA5_SetLow();
@@ -171,8 +171,9 @@ void SetAlarm(void) {
 
 void RTCNotRunErrMsg(void) {
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("RTC not Present");
+    __delay_ms(5000);
 }
 
 // System Setup, called once at start
@@ -182,7 +183,7 @@ void Setup(void) {
     BUZZER_RA2_SetLow();
     LED_RA5_SetHigh();
     __delay_ms(INIT_DELAY);
-    PCF8574_LCDInit(CURSOR_ON);
+    PCF8574_LCDInit(LCDCursorTypeOn, 2, 16, 0x27);
     PCF8574_LCDClearScreen();
     
     if (RTCDS1307_IsPresentClock()) {
@@ -194,7 +195,7 @@ void Setup(void) {
     //For debug  & only testing 
     //#define HARDCODE_TIME
     #ifdef HARDCODE_TIME
-            TCDS1307_writeClockStart();
+            RTCDS1307_writeClockStart(void);
     #endif
 
     // Data to save custom char to LCD CG_RAM
@@ -220,10 +221,10 @@ void SetTimeDate(void) {
 
     LED_RA5_SetHigh();
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("YYMMDDWHHMM ");
-    PCF8574_LCDSendData(1); // Print clock custom char
-    PCF8574_LCDGOTO(2, 0);
+    PCF8574_LCDPrintCustomChar(1); // Print clock custom char
+    PCF8574_LCDGOTO(LCDLineNumberTwo, 0);
     while (userDataInputLength < 11) {
         keyPressed = KeypadGetKey();
 
@@ -235,9 +236,9 @@ void SetTimeDate(void) {
         }
     }
     PCF8574_LCDClearScreen();
-    PCF8574_LCDGOTO(1, 0);
+    PCF8574_LCDGOTO(LCDLineNumberOne, 0);
     PCF8574_LCDSendString("Date time set");
-    PCF8574_LCDSendData(1); // Print clock custom char
+    PCF8574_LCDPrintCustomChar(1); // Print clock custom char
     RTCDS1307_writeClock(setTimeDate);
     __delay_ms(MSG_SHOW_DELAY);
     TMR0_StartTimer();
