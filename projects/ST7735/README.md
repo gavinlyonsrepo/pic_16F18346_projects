@@ -1,14 +1,13 @@
 Overview
 --------------------------------------------
 * Name: ST7735
-* Description: 
-Library for TFT SPI LCD, ST7735 Driver, RED PCB v1.1, 1.44'', 128 x 128 pixels. no SD card holder.
+* Description:  Library for TFT SPI LCD, ST7735 Driver.
  
-* Author: Gavin Lyons
-* Complier : XC8: 2.10
-* MCC version: 3.95
-* PIC: PIC16F18346
-* IDE:  MPLAB X v6.00
+1. Complier : XC8: 2.10
+2. MCC version: 3.95
+3. PIC: PIC16F18346
+4. IDE:  MPLAB X v6.00
+
 * Credits:  
 Based onCCS C compiler Library by [ simple-circuits](https://simple-circuit.com/st7735-tft-library-ccs-c-compiler/)  , 
 Arduino built-in TFT library and some code from github user [bablokb](https://github.com/bablokb/pic-st7735)
@@ -20,6 +19,7 @@ Features
 
 ![ ig ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/st7735/pcb.jpg)
  
+This is the only type of ST7735 tested on.
 This Color TFT LCD display has 128 x 128 resolution.
 It uses SPI interface to communicate with controller. Onboard LDO, support 5V/3.3V input voltage, 
 the LED backlight, 3.3V input. Size 1.44 inch, visual area 1.1 inch. Version 1.1. No SD Card.
@@ -47,7 +47,7 @@ See USER OPTION 2 PCB_TYPE in Setup() function in main.c
 **Fonts**
 
 Font one is included by default to include other font files see
-USER OPTION 3 FONT  at start of header file.
+USER OPTION 3 FONT  at start of font header file.
 
 Five fonts available : 
 
@@ -70,7 +70,7 @@ The Main.c contains  tests showing library functions
 The code generated using the MCC is in a folder called mcc_generated_files. 
 The SPI routine's are in here.
 There is also an TFT library (ST7735_TFT.c and ST7735_TFT.h),
-and five fonts file that contains ASCII pixel fonts.
+and the fonts file that contains ASCII pixel fonts.
 
 **Bitmap**
 

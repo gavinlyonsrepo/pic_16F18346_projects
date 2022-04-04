@@ -46,7 +46,7 @@ void EndTest(void);
 void main(void) 
 {
     Setup();
-    
+
     Test0();
     Test1A();
     Test1B();
