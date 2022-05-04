@@ -15,15 +15,20 @@ Arduino built-in TFT library and some code from github user [bablokb](https://gi
 Features
 ----------------------
 
-**TFT SPI LCD, ST7735 Driver, RED PCB v1.1, 1.44'', 128 x 128 pixels, No SD card**
+****
 
 ![ ig ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/st7735/pcb.jpg)
  
-This is the only type of ST7735 tested on.
-This Color TFT LCD display has 128 x 128 resolution.
-It uses SPI interface to communicate with controller. Onboard LDO, support 5V/3.3V input voltage, 
-the LED backlight, 3.3V input. Size 1.44 inch, visual area 1.1 inch. Version 1.1. No SD Card.
-Backlight control is left to user.
+ **Tested** 
+ 
+These two are only type of  ST7735 tested on but should work on other types in theory.
+
+1. TFT SPI LCD, ST7735 Driver, RED PCB v1.1, 1.44 , 128 x 128 pixels, "ST7735R Red Tab" 
+2. TFT SPI LCD, ST7735 Driver, RED PCB v1.2, 1.8 , 128 x 160 pixels, "ST7735S Black Tab" 
+
+The test files and full screen bitmaps are set up for number 1.  so user will have to modify 
+"USER OPTIONS 1 & 2" in main.c and provide own bitmap to test  number 2.
+No built-in SD card support at present and backlight control is left to user.
 
 **Screen Size settings**
 
@@ -80,7 +85,7 @@ Full color bitmaps are prohibitive on this PIC due to
 lack of memory. Note: The library was developed on a
 TFT without built-in SD card feature.
 
-1. Draw small custom icons X by 8 size where X is 0-128
+1. Draw small custom icons X by 8 size where X is 0-(128 or 160)
 useful to create icons or buttons or fill rows with patterns,
 vertically addressed .
 
@@ -107,7 +112,7 @@ vertically addressed .
 Output
 -----------------------
 
-Output of some of the test routine's Left to right top to bottom
+Output of some of the test routine's Left to right top to bottom. 128X128 TFT
 
 1. Different defined colors at default font size 1. Full 16 bit colour 565 available 
 2. Different sizes of default font: 2,3,4 & 5 . Are fonts are scale-able
