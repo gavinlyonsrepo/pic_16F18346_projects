@@ -37,8 +37,6 @@ In the setup() function in USER OPTION 1 Screen Setup. Select your PCB size and 
 **PCB Version**
 
 There are 4 types of the ST7735 TFT display supported.
-Only red tab has been tested here. 
-It should work on other TFT displays using the different init functions, but not tested.
 User picks the one they want when calling TFTInitPCBType() function
 See USER OPTION 2 PCB_TYPE in Setup() function in main.c
 
