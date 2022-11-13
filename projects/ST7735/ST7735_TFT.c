@@ -1,9 +1,9 @@
 /*
- * Project Name: ST7735, 128 by 128, 1.44", red pcb,  SPI TFT module, library.
+ * Project Name: ST7735
  * File: ST7735_TFT.c
  * Description: library source file
  * Author: Gavin Lyons.
- * Complier: xc8 v2.10 compiler
+ * Complier: xc8 v2.40 compiler
  * PIC: PIC16F18346
  * IDE:  MPLAB X v6.00
  * Created Sep 2020
@@ -11,10 +11,29 @@
  * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
  */
 
+
 #include "ST7735_TFT.h"
 #include "ST7735_TFT_Font.h"
 
 // ********* Variables  **********
+#ifdef TFT_Font_Default
+extern const char * pFontDefaultptr; // defined in ST7735_TFT_FONT.c 
+#endif
+#ifdef TFT_Font_Thick
+extern const char * pFontThickptr; // defined in ST7735_TFT_FONT.c
+#endif
+#ifdef TFT_Font_SevenSeg
+extern const char * pFontSevenptr; // defined in ST7735_TFT_FONT.c
+#endif
+#ifdef TFT_Font_Wide 
+extern const char * pFontWideptr; // defined in ST7735_TFT_FONT.c
+#endif
+#ifdef TFT_Font_Tiny
+extern const char * pFontTinyptr; // defined in ST7735_TFT_FONT.c
+#endif
+#ifdef TFT_Font_HomeSpun
+extern const char * pFontHomeptr; // defined in ST7735_TFT_FONT.c
+#endif
 
 uint8_t _TFTFontNumber = TFTFont_Default ;
 uint8_t _TFTCurrentFontWidth = 5;
@@ -29,20 +48,20 @@ uint8_t _TFTrowstart;
 uint8_t  _TFTxstart;  //  never change after first init
 uint8_t  _TFTystart ; //  never change after first init
 
-uint16_t _widthTFT;
-uint16_t _heightTFT;
-uint16_t _widthStartTFT; //  never change after first init
-uint16_t _heightStartTFT; // never change after first init
+uint8_t _widthTFT;
+uint8_t _heightTFT;
+uint8_t _widthStartTFT; //  never change after first init
+uint8_t _heightStartTFT; // never change after first init
+
 
 // ********* Function Space *************
 
-// Desc: Write to SPI both Software and hardware SPI supported
+// Desc: Write to SPI hardware SPI 
 // define TFT_SPI_HARDWARE toggles(see top of header file)
 // Param1:  byte to send
-
 void TFTspiWrite(uint8_t spidata) {
 #ifndef TFT_SPI_HARDWARE
-    uint8_t i;
+     uint8_t i;
     for (i = 0; i < 8; i++) {
         SDATA_RA2_SetLow();
         if (spidata & 0x80)SDATA_RA2_SetHigh(); // b1000000 Mask with 0 & all zeros out.
@@ -79,7 +98,7 @@ void TFTwriteData(uint8_t data_) {
 
 // Desc: Function for Hardware Reset pin
 
-void TFT_ResetPIN() {
+void TFTResetPIN() {
     RST_RA5_SetDigitalOutput();
     RST_RA5_SetHigh();
     __delay_ms(10);
@@ -91,8 +110,8 @@ void TFT_ResetPIN() {
 
 // Desc: init sub-routine ST7735R Green Tab
 
-void TFT_GreenTab_Initialize() {
-    TFT_ResetPIN();
+void TFTGreenTab_Initialize() {
+    TFTResetPIN();
     CS_RA0_SetHigh();
     DC_RA1_SetLow();
     CS_RA0_SetDigitalOutput();
@@ -105,15 +124,15 @@ void TFT_GreenTab_Initialize() {
 #else
     SPI1_Initialize();
 #endif
-    TFT_Rcmd1();
-    TFT_Rcmd2green();
-    TFT_Rcmd3();
+    TFTRcmd1();
+    TFTRcmd2green();
+    TFTRcmd3();
     _TFTType = TFT_ST7735R_Green;
 }
 
 // Desc: init sub-routine ST7735R Green Tab
 
-void TFT_Rcmd2green() {
+void TFTRcmd2green() {
     TFTwriteCommand(ST7735_CASET);
     TFTwriteData(0x00);
     TFTwriteData(0x02);
@@ -128,8 +147,8 @@ void TFT_Rcmd2green() {
 
 // Desc: ST7735R Red Tab Init Red PCB version
 
-void TFT_RedTab_Initialize() {
-    TFT_ResetPIN();
+void TFTRedTabInitialize() {
+    TFTResetPIN();
     CS_RA0_SetHigh();
     DC_RA1_SetLow();
     CS_RA0_SetDigitalOutput();
@@ -142,17 +161,17 @@ void TFT_RedTab_Initialize() {
 #else
     SPI1_Initialize();
 #endif
-    TFT_Rcmd1();
-    TFT_Rcmd2red();
-    TFT_Rcmd3();
+    TFTRcmd1();
+    TFTRcmd2red();
+    TFTRcmd3();
     _TFTType = TFT_ST7735R_Red ;
 
 }
 
 // Desc: Init Routine ST7735R Black Tab (ST7735S)
 
-void TFT_BlackTab_Initialize() {
-    TFT_ResetPIN();
+void TFTBlackTabInitialize() {
+    TFTResetPIN();
     CS_RA0_SetHigh();
     DC_RA1_SetLow();
     CS_RA0_SetDigitalOutput();
@@ -165,9 +184,9 @@ void TFT_BlackTab_Initialize() {
 #else
     SPI1_Initialize();
 #endif
-    TFT_Rcmd1();
-    TFT_Rcmd2red();
-    TFT_Rcmd3();
+    TFTRcmd1();
+    TFTRcmd2red();
+    TFTRcmd3();
     TFTwriteCommand(ST7735_MADCTL);
     TFTwriteData(0xC0);
     _TFTType = TFT_ST7735S_Black;
@@ -176,8 +195,8 @@ void TFT_BlackTab_Initialize() {
 
 // Desc: init routine for ST7735B controller
 
-void TFT_ST7735B_Initialize() {
-    TFT_ResetPIN();
+void TFTST7735BInitialize() {
+    TFTResetPIN();
     CS_RA0_SetHigh();
     DC_RA1_SetLow();
     CS_RA0_SetDigitalOutput();
@@ -190,14 +209,15 @@ void TFT_ST7735B_Initialize() {
 #else
     SPI1_Initialize();
 #endif
-    TFT_Bcmd();
+    TFTBcmd();
     _TFTType = TFT_ST7735B;
 }
 
 
 // Desc: init routine for ST7735B controller
 
-void TFT_Bcmd() {
+void TFTBcmd() {
+    uint8_t i=0;
     TFTwriteCommand(ST7735_SWRESET);
     __delay_ms(50);
     TFTwriteCommand(ST7735_SLPOUT);
@@ -234,39 +254,12 @@ void TFT_Bcmd() {
     TFTwriteData(0x11);
     TFTwriteData(0x15);
     TFTwriteCommand(ST7735_GMCTRP1);
-    TFTwriteData(0x09);
-    TFTwriteData(0x16);
-    TFTwriteData(0x09);
-    TFTwriteData(0x20);
-    TFTwriteData(0x21);
-    TFTwriteData(0x1B);
-    TFTwriteData(0x13);
-    TFTwriteData(0x19);
-    TFTwriteData(0x17);
-    TFTwriteData(0x15);
-    TFTwriteData(0x1E);
-    TFTwriteData(0x2B);
-    TFTwriteData(0x04);
-    TFTwriteData(0x05);
-    TFTwriteData(0x02);
-    TFTwriteData(0x0E);
-    TFTwriteCommand(ST7735_GMCTRN1);
-    TFTwriteData(0x0B);
-    TFTwriteData(0x14);
-    TFTwriteData(0x08);
-    TFTwriteData(0x1E);
-    TFTwriteData(0x22);
-    TFTwriteData(0x1D);
-    TFTwriteData(0x18);
-    TFTwriteData(0x1E);
-    TFTwriteData(0x1B);
-    TFTwriteData(0x1A);
-    TFTwriteData(0x24);
-    TFTwriteData(0x2B);
-    TFTwriteData(0x06);
-    TFTwriteData(0x06);
-    TFTwriteData(0x02);
-    TFTwriteData(0x0F);
+    static uint8_t seq6[] = {0x09, 0x16, 0x09, 0x20, 0x21, 0x1B, 0x13, 0x19, 0x17, 0x15, 0x1E, 0x2B, 0x04, 0x05, 0x02, 0x0E};
+    while (seq6[i++] != '\0' ){TFTspiWrite(seq6[i]);}
+       TFTwriteCommand(ST7735_GMCTRN1);
+    static uint8_t seq7[]= {0x0B, 0x14, 0x08, 0x1E, 0x22, 0x1D, 0x18, 0x1E, 0x1B, 0x1A, 0x24, 0x2B, 0x06, 0x06, 0x02, 0x0F}; 
+	i = 0;
+    while (seq7[i++] != '\0' ){TFTspiWrite(seq7[i]);}
     __delay_ms(10);
     TFTwriteCommand(ST7735_CASET);
     TFTwriteData(0x00);
@@ -287,7 +280,8 @@ void TFT_Bcmd() {
 
 // Desc: init routine
 
-void TFT_Rcmd1() {
+void TFTRcmd1() {
+    
     TFTwriteCommand(ST7735_SWRESET);
     __delay_ms(150);
     TFTwriteCommand(ST7735_SLPOUT);
@@ -297,7 +291,7 @@ void TFT_Rcmd1() {
     TFTwriteData(0x2C);
     TFTwriteData(0x2D);
     TFTwriteCommand(ST7735_FRMCTR2);
-    TFTwriteData(0x01);
+	TFTwriteData(0x01);
     TFTwriteData(0x2C);
     TFTwriteData(0x2D);
     TFTwriteCommand(ST7735_FRMCTR3);
@@ -335,7 +329,7 @@ void TFT_Rcmd1() {
 
 // Desc: init sub-routine
 
-void TFT_Rcmd2red() {
+void TFTRcmd2red() {
     TFTwriteCommand(ST7735_CASET);
     TFTwriteData(0x00);
     TFTwriteData(0x00);
@@ -350,41 +344,15 @@ void TFT_Rcmd2red() {
 
 // Desc: init sub-routine
 
-void TFT_Rcmd3() {
+void TFTRcmd3() {
+    uint8_t i = 0;
     TFTwriteCommand(ST7735_GMCTRP1);
-    TFTwriteData(0x02);
-    TFTwriteData(0x1C);
-    TFTwriteData(0x07);
-    TFTwriteData(0x12);
-    TFTwriteData(0x37);
-    TFTwriteData(0x32);
-    TFTwriteData(0x29);
-    TFTwriteData(0x2D);
-    TFTwriteData(0x29);
-    TFTwriteData(0x25);
-    TFTwriteData(0x2B);
-    TFTwriteData(0x39);
-    TFTwriteData(0x00);
-    TFTwriteData(0x01);
-    TFTwriteData(0x03);
-    TFTwriteData(0x10);
+    static uint8_t seq4[] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10}; 
+	while (seq4[i++] != '\0' ){TFTspiWrite(seq4[i]);}
     TFTwriteCommand(ST7735_GMCTRN1);
-    TFTwriteData(0x03);
-    TFTwriteData(0x1D);
-    TFTwriteData(0x07);
-    TFTwriteData(0x06);
-    TFTwriteData(0x2E);
-    TFTwriteData(0x2C);
-    TFTwriteData(0x29);
-    TFTwriteData(0x2D);
-    TFTwriteData(0x2E);
-    TFTwriteData(0x2E);
-    TFTwriteData(0x37);
-    TFTwriteData(0x3F);
-    TFTwriteData(0x00);
-    TFTwriteData(0x00);
-    TFTwriteData(0x02);
-    TFTwriteData(0x10);
+    static uint8_t seq5[] = {0x03, 0x1D, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10}; 
+	i = 0;
+    while (seq5[i++] != '\0') {TFTspiWrite(seq5[i]);}
     TFTwriteCommand(ST7735_NORON);
     __delay_ms(10);
     TFTwriteCommand(ST7735_DISPON);
@@ -399,17 +367,17 @@ void TFT_Rcmd3() {
   Param4:  h  Height of window
  https://en.wikipedia.org/wiki/Bit_blit
  */
-void TFTsetAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
+void TFTsetAddrWindow(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
     TFTwriteCommand(ST7735_CASET);
     TFTwriteData(0);
-    TFTwriteData(x0 + _TFTxstart);
+    TFTwriteData((uint8_t)x0 + _TFTxstart);
     TFTwriteData(0);
-    TFTwriteData(x1 + _TFTxstart);
+    TFTwriteData((uint8_t)x1 + _TFTxstart);
     TFTwriteCommand(ST7735_RASET);
     TFTwriteData(0);
-    TFTwriteData(y0 + _TFTystart);
+    TFTwriteData((uint8_t)y0 + _TFTystart);
     TFTwriteData(0);
-    TFTwriteData(y1 + _TFTystart);
+    TFTwriteData((uint8_t)y1 + _TFTystart);
     TFTwriteCommand(ST7735_RAMWR); // Write to RAM
 }
 
@@ -418,7 +386,7 @@ void TFTsetAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 //Param2 Y  co-ord
 //Param3 color 565 16-bit
 
-void TFTdrawPixel(uint8_t x, uint8_t y, uint16_t color) {
+void TFTdrawPixel(int16_t x, int16_t y, uint16_t color) {
     if ((x >= _widthTFT) || (y >= _heightTFT))
         return;
     TFTsetAddrWindow(x, y, x + 1, y + 1);
@@ -429,7 +397,8 @@ void TFTdrawPixel(uint8_t x, uint8_t y, uint16_t color) {
 // Desc: fills a rectangle starting from coordinates (x,y) with width of w and height of h.
 
 void TFTfillRectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color) {
-    uint8_t hi, lo;
+    
+        uint8_t hi, lo;
     if ((x >= _widthTFT) || (y >= _heightTFT))
         return;
     if ((x + w - 1) >= _widthTFT)
@@ -438,7 +407,7 @@ void TFTfillRectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color
         h = _heightTFT - y;
     TFTsetAddrWindow(x, y, x + w - 1, y + h - 1);
     hi = color >> 8;
-    lo = color;
+    lo = color & 0xFF;
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
     for (y = h; y > 0; y--) {
@@ -448,6 +417,7 @@ void TFTfillRectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color
         }
     }
     CS_RA0_SetHigh();
+
 }
 
 // Desc: Fills the whole screen with a given color.
@@ -458,14 +428,14 @@ void TFTfillScreen(uint16_t color) {
 
 // Desc: Draws a vertical line starting at (x,y) with height h.
 
-void TFTdrawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint16_t color) {
+void TFTdrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
     uint8_t hi, lo;
     if ((x >= _widthTFT) || (y >= _heightTFT))
         return;
     if ((y + h - 1) >= _heightTFT)
         h = _heightTFT - y;
     hi = color >> 8;
-    lo = color;
+    lo = color & 0xFF;
     TFTsetAddrWindow(x, y, x, y + h - 1);
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
@@ -478,14 +448,14 @@ void TFTdrawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint16_t color) {
 
 // Desc: Draws a horizontal line starting at (x,y) with width w.
 
-void TFTdrawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint16_t color) {
+void TFTdrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
     uint8_t hi, lo;
     if ((x >= _widthTFT) || (y >= _heightTFT))
         return;
     if ((x + w - 1) >= _widthTFT)
         w = _widthTFT - x;
     hi = color >> 8;
-    lo = color;
+    lo = color & 0xFF;
     TFTsetAddrWindow(x, y, x + w - 1, y);
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
@@ -499,7 +469,7 @@ void TFTdrawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint16_t color) {
 // Desc: draws a circle where (x0,y0) are center coordinates an r is circle radius.
 
 void TFTdrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
-    int16_t f, ddF_x, ddF_y, x, y;
+    int16_t f, ddF_x, ddF_y,x ,y;
     f = 1 - r, ddF_x = 1, ddF_y = -2 * r, x = 0, y = r;
     TFTdrawPixel(x0, y0 + r, color);
     TFTdrawPixel(x0, y0 - r, color);
@@ -528,7 +498,7 @@ void TFTdrawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
 // Desc : used internally by drawRoundRect
 
 void TFTdrawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color) {
-    int16_t f, ddF_x, ddF_y, x, y;
+    int16_t f, ddF_x, ddF_y, x, y ;
     f = 1 - r, ddF_x = 1, ddF_y = -2 * r, x = 0, y = r;
     while (x < y) {
         if (f >= 0) {
@@ -561,7 +531,7 @@ void TFTdrawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, 
 // Desc : used internally by fill circle fillRoundRect
 
 void TFTfillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color) {
-    int16_t f, ddF_x, ddF_y, x, y;
+    int16_t f, ddF_x, ddF_y,x ,y;
     f = 1 - r, ddF_x = 1, ddF_y = -2 * r, x = 0, y = r;
     while (x < y) {
         if (f >= 0) {
@@ -640,7 +610,7 @@ void TFTdrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 void TFTfillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color) {
     int16_t i;
     for (i = x; i < x + w; i++) {
-        TFTdrawFastVLine(i, y, h, color);
+        TFTdrawFastVLine((uint8_t)i, y, h, color);
     }
 }
 
@@ -739,7 +709,7 @@ void TFTfillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2,
 
 void TFTdrawChar(uint8_t x, uint8_t y, uint8_t c, uint16_t color, uint16_t bg, uint8_t size) {
     const uint8_t ASCIIOffset = 0x20;
-    int8_t i, j;
+    uint8_t i, j;
     
     if ((x >= _widthTFT) || (y >= _heightTFT))
         return;
@@ -751,27 +721,32 @@ void TFTdrawChar(uint8_t x, uint8_t y, uint8_t c, uint16_t color, uint16_t bg, u
         switch (_TFTFontNumber) {
             case 1:
 #ifdef TFT_Font_Default
-                line = Font_Default[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+                line = pFontDefaultptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];            
 #endif
                 break;
             case 2:
 #ifdef TFT_Font_Thick
-                line = Font_Thick[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+                line = pFontThickptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
 #endif
                 break;
             case 3:
 #ifdef TFT_Font_SevenSeg
-                line = Font_SevenSeg[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+                line = pFontSevenptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
 #endif
                 break;
             case 4:
 #ifdef TFT_Font_Wide
-                line = Font_Wide[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+                line = pFontWideptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
 #endif
                 break;
             case 5:
 #ifdef TFT_Font_Tiny
-                line = Font_Tiny[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+                line = pFontTinyptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
+#endif
+                break;
+            case 6:
+#ifdef TFT_Font_HomeSpun
+                line = pFontHomeptr[(c - ASCIIOffset) * _TFTCurrentFontWidth + i];
 #endif
                 break;
         }
@@ -935,7 +910,7 @@ int16_t Color565(int16_t r, int16_t g, int16_t b) {
 void TFTpushColor(uint16_t color) {
     uint8_t hi, lo;
     hi = color >> 8;
-    lo = color;
+    lo = color & 0xFF;
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
     TFTspiWrite(hi);
@@ -945,34 +920,26 @@ void TFTpushColor(uint16_t color) {
 
 
 //  Desc :  Set the font number
-// Param1: fontnumber 1-5 enum ST7735_FontType_e
-// 1=default 2=thick 3=seven segment 4=wide 5=tiny
+// Param1: fontnumber 1-6 enum ST7735_FontType_e
+// 1=default 2=thick 3=seven segment 4=wide 5=tiny 6=homespun
 // Fonts must be enabled at top of header file.
 void TFTFontNum(ST7735_FontType_e FontNumber) {
 
-    typedef enum 
-    {
-        TFTFont_width_3 = 3, // tiny
-        TFTFont_width_4 = 4, // Seven seg
-        TFTFont_width_5 = 5, // default
-        TFTFont_width_7 = 7, // thick
-        TFTFont_width_8 = 8 // wide
-    }ST7735_FontWidth_e; // width of the font in bytes, cols.
+   _TFTFontNumber = FontNumber;
 
-    ST7735_FontWidth_e setfontwidth;
-    _TFTFontNumber = FontNumber;
-
-    switch (_TFTFontNumber) {
-        case 1: _TFTCurrentFontWidth = (setfontwidth = TFTFont_width_5);
+    switch (_TFTFontNumber ) {
+        case TFTFont_Default: _TFTCurrentFontWidth = TFTFont_width_5;
             break; // Norm default 5 by 8
-        case 2: _TFTCurrentFontWidth = (setfontwidth = TFTFont_width_7);
+        case TFTFont_Thick: _TFTCurrentFontWidth = TFTFont_width_7;
             break; //Thick 7 by 8 (NO LOWERCASE LETTERS)
-        case 3: _TFTCurrentFontWidth = (setfontwidth = TFTFont_width_4);
+        case TFTFont_Seven_Seg: _TFTCurrentFontWidth = TFTFont_width_4;
             break; //Seven segment 4 by 8
-        case 4: _TFTCurrentFontWidth = (setfontwidth = TFTFont_width_8);
+        case TFTFont_Wide: _TFTCurrentFontWidth = TFTFont_width_8;
             break; // Wide  8 by 8 (NO LOWERCASE LETTERS)
-        case 5: _TFTCurrentFontWidth = (setfontwidth = TFTFont_width_3);
+        case TFTFont_Tiny: _TFTCurrentFontWidth = TFTFont_width_3;
             break; //Tiny 3 by 8
+        case TFTFont_Homespun: _TFTCurrentFontWidth = TFTFont_width_7;
+            break; //homespun 7 by 8 
     }
 }
 
@@ -1091,7 +1058,7 @@ void TFTdrawBitmap(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color, u
 // Param 2: Row offset
 // Param 3: Screen width in pixels
 // Param 4: Screen height in pixels
-void TFTInitScreenSize(uint8_t colOffset, uint8_t rowOffset, uint16_t width_TFT, uint16_t height_TFT)
+void TFTInitScreenSize(uint8_t colOffset, uint8_t rowOffset, uint8_t width_TFT, uint8_t height_TFT)
 {
 	_TFTcolstart = colOffset; 
 	_TFTrowstart= rowOffset;
@@ -1111,11 +1078,12 @@ void TFTInitPCBType(ST7735_PCBtype_e pcbType)
 	uint8_t choice = pcbType;
 	switch(choice)
 	{
-		case TFT_ST7735R_Red : TFT_RedTab_Initialize(); break;
-		case TFT_ST7735R_Green: TFT_GreenTab_Initialize(); break;
-		case TFT_ST7735S_Black: TFT_BlackTab_Initialize(); break;
-		case TFT_ST7735B : TFT_ST7735B_Initialize(); break;
-		default: _nop(); break;
+		case TFT_ST7735R_Red : TFTRedTabInitialize(); break;
+		case TFT_ST7735R_Green: TFTGreenTab_Initialize(); break;
+		case TFT_ST7735S_Black: TFTBlackTabInitialize(); break;
+		case TFT_ST7735B : TFTST7735BInitialize(); break;
 	}
 }
+
+
 //**************** EOF *****************

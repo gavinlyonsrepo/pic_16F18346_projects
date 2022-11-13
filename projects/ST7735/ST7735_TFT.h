@@ -1,11 +1,11 @@
 /*
- * Project Name: ST7735, 128 by 128, 1.44", red pcb,  SPI TFT module, library.  
+ * Project Name: ST7735  
  * File: ST7735_TFT.h
  * Description: library header file   
  * Author: Gavin Lyons.
- * Complier: xc8 v2.10 compiler
+ * Complier: xc8 v2.40 compiler
  * PIC: PIC16F18346
- * IDE:  MPLAB X v5.30
+ * IDE:  MPLAB X v6.00
  * Created Sep 2020
  * Description: See URL for full details.
  * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
@@ -16,6 +16,7 @@
 
 #include <string.h>
 #include "mcc_generated_files/mcc.h"
+
 
 // ******** USER OPTION 4 SPI TYPE ***********
 // SPI TFT module connections
@@ -106,6 +107,8 @@
 #define   ST7735_TAN     0xED01
 #define   ST7735_GREY    0x9CD1
 #define   ST7735_BROWN   0x6201
+#define   ST7735_PINK    0xF812
+#define   ST7735_ORANGE  0xFC00
 
 #define _swap_TFT(a, b) { int16_t t; t = a; a = b; b = t;}
 
@@ -139,7 +142,18 @@ typedef enum
 	TFTFont_Seven_Seg = 3,
 	TFTFont_Wide = 4,
 	TFTFont_Tiny = 5,
-}ST7735_FontType_e; // Font type 1-5
+    TFTFont_Homespun = 6
+}ST7735_FontType_e; // Font type 1-6
+
+typedef enum 
+{
+	TFTFont_width_3 = 3, 
+	TFTFont_width_5 = 5, 
+	TFTFont_width_7 = 7, 
+	TFTFont_width_4 = 4, 
+	TFTFont_width_8 = 8,
+	TFTFont_width_16= 16
+}ST7735_Font_width_e; // width of the font in bytes, cols.
 
 ST7735_modes_e     ST7735_modes;
 ST7735_rotate_e    ST7735_rotate;
@@ -148,31 +162,31 @@ ST7735_FontType_e  ST7735_FontType;
 
 // ******** FUNCTION  PROTOTYPES ************ 
 
-
 // SPI 
-void TFTspiWrite(uint8_t);
 void TFTwriteCommand(uint8_t);
 void TFTwriteData(uint8_t);
+void TFTspiWrite(uint8_t);
+
 
 // Init routines 
 void TFTInitPCBType(ST7735_PCBtype_e);
-void TFTInitScreenSize(uint8_t xOffset, uint8_t yOffset, uint16_t w, uint16_t h);
-void TFT_ResetPIN(void);
+void TFTInitScreenSize(uint8_t xOffset, uint8_t yOffset, uint8_t w, uint8_t h);
+void TFTResetPIN(void);
 
-void TFT_Rcmd1(void);
-void TFT_Rcmd2red(void);
-void TFT_Rcmd3(void);
-void TFT_Bcmd(void);
-void TFT_Rcmd2green(void);
+void TFTRcmd1(void);
+void TFTRcmd2red(void);
+void TFTRcmd3(void);
+void TFTBcmd(void);
+void TFTRcmd2green(void);
 
-void TFT_ST7735B_Initialize(void);
-void TFT_GreenTab_Initialize(void);
-void TFT_BlackTab_Initialize(void);
-void TFT_RedTab_Initialize(void);
+void TFTST7735BInitialize(void);
+void TFTGreenTab_Initialize(void);
+void TFTBlackTabInitialize(void);
+void TFTRedTabInitialize(void);
 
 
 // Misc + Screen related
-void TFTsetAddrWindow(uint8_t, uint8_t, uint8_t, uint8_t);
+void TFTsetAddrWindow(int16_t, int16_t, int16_t, int16_t);
 void TFTfillScreen(uint16_t color);
 void TFTpushColor(uint16_t color);
 void TFTsetRotation(ST7735_rotate_e r);
@@ -183,10 +197,10 @@ void TFTsetScrollDefinition(uint8_t topFixHeight, uint8_t bottomFixHeight, bool 
 void TFTVerticalScroll(uint8_t vsp);
 
 // Shapes and lines
-void TFTdrawPixel(uint8_t, uint8_t, uint16_t);
+void TFTdrawPixel(int16_t, int16_t, uint16_t);
 void TFTdrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
-void TFTdrawFastVLine(uint8_t x, uint8_t y, uint8_t h, uint16_t color);
-void TFTdrawFastHLine(uint8_t x, uint8_t y, uint8_t w, uint16_t color);
+void TFTdrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+void TFTdrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
 
 void TFTdrawRectWH(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color);
 void TFTfillRectangle(uint8_t, uint8_t, uint8_t, uint8_t, uint16_t);

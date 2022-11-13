@@ -3,10 +3,9 @@ Overview
 * Name: ST7735
 * Description:  Library for TFT SPI LCD, ST7735 Driver.
  
-1. Complier : XC8: 2.10
-2. MCC version: 3.95
-3. PIC: PIC16F18346
-4. IDE:  MPLAB X v6.00
+1. Complier : XC8: 2.40
+2. PIC: PIC16F18346
+3. IDE:  MPLAB X v6.00
 
 * Credits:  
 Based onCCS C compiler Library by [ simple-circuits](https://simple-circuit.com/st7735-tft-library-ccs-c-compiler/)  , 
@@ -52,7 +51,7 @@ See USER OPTION 2 PCB_TYPE in Setup() function in main.c
 Font one is included by default to include other font files see
 USER OPTION 3 FONT  at start of font header file.
 
-Five fonts available : 
+Six fonts available : 
 
 | Font num | Font name | Pixel size |  Note |
 | ------ | ------ | ------ | ------ |  
@@ -61,6 +60,7 @@ Five fonts available :
 | 3 | Seven segment | 4x8 | ------ |
 | 4 | Wide | 8x8 | no lowercase letters |
 | 5 | Tiny | 3x8 |  ------ |
+| 6 | Homespun | 7x8 |   ------ |
  
 **SPI**
 
@@ -83,7 +83,7 @@ Full color bitmaps are prohibitive on this PIC due to
 lack of memory. Note: The library was developed on a
 TFT without built-in SD card feature.
 
-1. Draw small custom icons X by 8 size where X is 0-(128 or 160)
+1. Draw small custom icons X by 8 size where X is 0-(MaxY)
 useful to create icons or buttons or fill rows with patterns,
 vertically addressed .
 
@@ -114,7 +114,7 @@ Output of some of the test routine's Left to right top to bottom. 128X128 TFT
 
 1. Different defined colors at default font size 1. Full 16 bit colour 565 available 
 2. Different sizes of default font: 2,3,4 & 5 . Are fonts are scale-able
-3. Different Fonts at font size 2, five fonts included .
+3. Different Fonts at font size 2, Six fonts included, 1-5 shown.
 4. Shapes
 5. Shapes
 6. Bitmap (bi-color) A background and a foreground. 
