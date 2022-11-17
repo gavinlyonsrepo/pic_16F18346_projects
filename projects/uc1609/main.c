@@ -55,11 +55,11 @@ void main(void) {
 
     Setup();
     while (1) {
-        Test_1_3();
+       Test_1_3();
 #ifdef TestFontsOn  // testing fonts 2-6
         Test_4_11();
 #endif
-                LCDupdate();
+        LCDupdate();
     }
 } // *********** End of main ************************
 
@@ -74,7 +74,7 @@ void Setup(void) {
     // Set up starting text mode, colour size font 
     setTextColor(BACKGROUND, FOREGROUND);
     setTextSize(1);
-    setFontNum(UC1609Font_Default);
+    setFontNum(FONT_N_DEFAULT);
     //init the graphics          
     custom_graphics_init(myLCDwidth, myLCDheight);
 
@@ -99,7 +99,7 @@ void Test_1_3(void) {
 
 
     // Test 2: text
-    setFontNum(UC1609Font_Default);
+    setFontNum(FONT_N_DEFAULT);
     drawChar(150, 30, '1', BACKGROUND, FOREGROUND, 2);
     drawText(10, 10, "hello world ", FOREGROUND, BACKGROUND, 1);
 
@@ -140,7 +140,7 @@ void Test_4_11(void) {
     // Assign address of struct to be the active buffer pointer 
     ActiveBuffer = &mybuffer;
     
-    setFontNum(UC1609Font_Default);
+    setFontNum(FONT_N_DEFAULT);
     // TEST 4
     drawText(0, 0, "HelloWorld", FOREGROUND, BACKGROUND, 3);
 
@@ -174,11 +174,11 @@ void Test_4_11(void) {
     LCDclearBuffer(); // Clear the buffer
 
     // Test 9 :: font 2 3 4
-    setFontNum(UC1609Font_Thick); // Thick 
+    setFontNum(FONT_N_THICK); // Thick 
     drawText(0, 0, "HELLO WORLD 123", FOREGROUND, BACKGROUND, 1);
-    setFontNum(UC1609Font_Seven_Seg); //seven segment
+    setFontNum(FONT_N_SEVENSEG); //seven segment
     drawText(0, 20, "HELLO WORLD 456 ", FOREGROUND, BACKGROUND, 1);
-    setFontNum(UC1609Font_Wide); // wide 
+    setFontNum(FONT_N_WIDE); // wide 
     drawText(0, 40, "HELLO WORLD 789", FOREGROUND, BACKGROUND, 1);
 
     LCDupdate();
@@ -186,7 +186,7 @@ void Test_4_11(void) {
     LCDclearBuffer(); // Clear the buffer
 
     // Test 10 :: font 5
-    setFontNum(UC1609Font_Bignum);
+    setFontNum(FONT_N_BIGNUM);
     drawTextNumFont(0, 32, "12345", BACKGROUND, FOREGROUND);
     drawCharNumFont(0, 0, '5', FOREGROUND, BACKGROUND);
     drawCharNumFont(160, 0, '5', BACKGROUND, FOREGROUND);
@@ -196,7 +196,7 @@ void Test_4_11(void) {
     LCDclearBuffer(); // Clear the buffer
 
     // Test 11 :: font 6
-    setFontNum(UC1609Font_Mednum);
+    setFontNum(FONT_N_MEDNUM);
     drawTextNumFont(0, 32, "123456", BACKGROUND, FOREGROUND);
     drawCharNumFont(0, 0, '6', FOREGROUND, BACKGROUND);
     drawCharNumFont(160, 0, '6', BACKGROUND, FOREGROUND);

@@ -2,7 +2,7 @@
 /*
 * Project Name: ERM19264_UC1609
 * File:custom_graphics.c
-* Description: ERM19264 LCD driven by UC1609C controller header file for the custom graphics functions based on Adafruit graphics library( see above)
+* Description: ERM19264 LCD driven by UC1609C controller header file for the custom graphics functions
 * Author: Gavin Lyons.
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
@@ -10,7 +10,7 @@
 #include <string.h>
 #include "mcc_generated_files/mcc.h"
 #include "custom_graphics.h"
-#include "custom_graphics_font.c"
+#include "ERM19264_font.h"
 
 int16_t height(void);
 int16_t width(void);
@@ -26,9 +26,7 @@ uint8_t textsize;
 
 bool wrap; // If set, 'wrap' text at right edge of display
 
-UC1609FONT_e FontNum;
-
-uint8_t _FontNumber = UC1609Font_Default;
+uint8_t _FontNumber = FONT_N_DEFAULT;
 uint8_t _CurrentFontWidth = 5;
 uint8_t _CurrentFontoffset = 0;
 uint8_t _CurrentFontheight = 8;
@@ -152,7 +150,7 @@ void fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
   }
 }
 
-// Bresenham's algorithm - thx wikpedia
+// Bresenham's algorithm -
 void drawLine(int16_t x0, int16_t y0,
 			    int16_t x1, int16_t y1,
 			    uint16_t color) {
@@ -206,19 +204,16 @@ void drawRect(int16_t x, int16_t y,
 
 void drawFastVLine(int16_t x, int16_t y,
 				 int16_t h, uint16_t color) {
-  // Update in subclasses if desired!
   drawLine(x, y, x, y+h-1, color);
 }
 
 void drawFastHLine(int16_t x, int16_t y,
 				 int16_t w, uint16_t color) {
-  // Update in subclasses if desired!
   drawLine(x, y, x+w-1, y, color);
 }
 
 void fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 			    uint16_t color) {
-  // Update in subclasses if desired!
   for (int16_t i=x; i<x+w; i++) {
     drawFastVLine(i, y, h, color);
   }
@@ -231,7 +226,6 @@ void fillScreen(uint16_t color) {
 // Draw a rounded rectangle
 void drawRoundRect(int16_t x, int16_t y, int16_t w,
   int16_t h, int16_t r, uint16_t color) {
-  // smarter version
   drawFastHLine(x+r  , y    , w-2*r, color); // Top
   drawFastHLine(x+r  , y+h-1, w-2*r, color); // Bottom
   drawFastVLine(x    , y+r  , h-2*r, color); // Left
@@ -246,7 +240,6 @@ void drawRoundRect(int16_t x, int16_t y, int16_t w,
 // Fill a rounded rectangle
 void fillRoundRect(int16_t x, int16_t y, int16_t w,
 				 int16_t h, int16_t r, uint16_t color) {
-  // smarter version
   fillRect(x+r, y, w-2*r, h, color);
 
   // draw four corners
@@ -281,7 +274,7 @@ void fillTriangle ( int16_t x0, int16_t y0,
     swap(y0, y1); swap(x0, x1);
   }
 
-  if(y0 == y2) { // Handle awkward all-on-same-line case as its own thing
+  if(y0 == y2) { 
     a = b = x0;
     if(x1 < a)      a = x1;
     else if(x1 > b) b = x1;
@@ -302,12 +295,7 @@ void fillTriangle ( int16_t x0, int16_t y0,
     sa   = 0,
     sb   = 0;
 
-  // For upper part of triangle, find scanline crossings for segments
-  // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
-  // is included here (and second loop will be skipped, avoiding a /0
-  // error there), otherwise scanline y1 is skipped here and handled
-  // in the second loop...which also avoids a /0 error here if y0=y1
-  // (flat-topped triangle).
+
   if(y1 == y2) last = y1;   // Include y1 scanline
   else         last = y1-1; // Skip it
 
@@ -316,16 +304,11 @@ void fillTriangle ( int16_t x0, int16_t y0,
     b   = x0 + sb / dy02;
     sa += dx01;
     sb += dx02;
-    /* longhand:
-    a = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
-    b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
-    */
+
     if(a > b) swap(a,b);
     drawFastHLine(a, y, b-a+1, color);
   }
 
-  // For lower part of triangle, find scanline crossings for segments
-  // 0-2 and 1-2.  This loop is skipped if y1=y2.
   sa = dx12 * (y - y1);
   sb = dx02 * (y - y0);
   for(; y<=y2; y++) {
@@ -333,10 +316,6 @@ void fillTriangle ( int16_t x0, int16_t y0,
     b   = x0 + sb / dy02;
     sa += dx12;
     sb += dx02;
-    /* longhand:
-    a = x1 + (x2 - x1) * (y - y1) / (y2 - y1);
-    b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
-    */
     if(a > b) swap(a,b);
     drawFastHLine(a, y, b-a+1, color);
   }
@@ -361,17 +340,17 @@ void drawChar(int16_t x, int16_t y, unsigned char c,
 		else 
 		{
 			 switch (_FontNumber) {
-#ifdef UC1609_Font_One
-				case UC1609Font_Default : line = UC_Font_One[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Default
+				case FONT_N_DEFAULT : line = pFontDefaultptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif 
-#ifdef UC1609_Font_Two
-				case UC1609Font_Thick: line = UC_Font_Two[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Thick
+				case FONT_N_THICK: line = pFontThickptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
-#ifdef UC1609_Font_Three
-				case UC1609Font_Seven_Seg : line = UC_Font_Three[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_SevenSeg
+				case FONT_N_SEVENSEG : line = pFontSevenSegptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
-#ifdef UC1609_Font_Four
-				case  UC1609Font_Wide: line = UC_Font_Four[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Wide
+				case  FONT_N_WIDE: line = pFontWideptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
 				default: // wrong font number
 						return;
@@ -442,67 +421,48 @@ void drawText(uint8_t x, uint8_t y, char *_text, uint16_t color, uint16_t bg, ui
 }
 
 // Desc :  Set the font number
-// Param1: fontnumber 1-5
+// Param1: fontnumber 1-6
 // 1=default 2=thick 3=seven segment 4=wide 5=bignums 6 = mednums
 
 void setFontNum(uint8_t FontNumber) 
 {
 	_FontNumber = FontNumber;
 	
-	enum LCD_Font_width
-	{
-		FONT_W_FIVE = 5, FONT_W_SEVEN = 7, FONT_W_FOUR = 4, FONT_W_EIGHT = 8,FONT_W_16= 16
-	}; // width of the font in bytes cols.
-	
-	enum LCD_Font_offset
-	{
-		FONT_O_EXTEND = ERM19264_ASCII_OFFSET, FONT_O_SP = ERM19264_ASCII_OFFSET_SP, FONT_N_SP = ERM19264_ASCII_OFFSET_NUM
-	}; // font offset in the ASCII table
-	
-	enum LCD_Font_height
-	{
-		FONT_H_8 = 8, FONT_H_16 = 16, FONT_H_32 = 32
-	}; // width of the font in bits
-	
-	enum LCD_Font_width setfontwidth;
-	enum LCD_Font_offset setoffset;
-	enum LCD_Font_height setfontheight;
-	
 	switch (_FontNumber) {
 		case 1:  // Norm default 5 by 8
-			_CurrentFontWidth = (setfontwidth = FONT_W_FIVE);
-			_CurrentFontoffset =  (setoffset = FONT_O_EXTEND);
-			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_CurrentFontWidth = FONT_W_FIVE;
+			_CurrentFontoffset = FONT_O_EXTEND;
+			_CurrentFontheight = FONT_H_8;
 		break; 
 		case 2: // Thick 7 by 8 (NO LOWERCASE LETTERS)
-			_CurrentFontWidth = (setfontwidth = FONT_W_SEVEN);
-			_CurrentFontoffset =  (setoffset = FONT_O_SP);
-			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_CurrentFontWidth = FONT_W_SEVEN;
+			_CurrentFontoffset =  FONT_O_SP;
+			_CurrentFontheight = FONT_H_8;
 		break; 
 		case 3:  // Seven segment 4 by 8
-			_CurrentFontWidth = (setfontwidth = FONT_W_FOUR);
-			_CurrentFontoffset =  (setoffset = FONT_O_SP);
-			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_CurrentFontWidth = FONT_W_FOUR;
+			_CurrentFontoffset =   FONT_O_SP;
+			_CurrentFontheight = FONT_H_8;
 		break;
 		case 4: // Wide  8 by 8 (NO LOWERCASE LETTERS)
-			_CurrentFontWidth = (setfontwidth = FONT_W_EIGHT);
-			_CurrentFontoffset =  (setoffset = FONT_O_SP);
-			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_CurrentFontWidth = FONT_W_EIGHT;
+			_CurrentFontoffset =  FONT_O_SP;
+			_CurrentFontheight = FONT_H_8;
 		break; 
 		case 5: // big nums 16 by 32 (NUMBERS + : only)
-			_CurrentFontWidth = (setfontwidth = FONT_W_16);
-			_CurrentFontoffset =  (setoffset = FONT_N_SP);
-			_CurrentFontheight = (setfontheight=FONT_H_32);
+			_CurrentFontWidth = FONT_W_16;
+			_CurrentFontoffset = FONT_N_SP;
+			_CurrentFontheight = FONT_H_32;
 		break; 
 		case 6: // med nums 16 by 16 (NUMBERS + : only)
-			_CurrentFontWidth = (setfontwidth = FONT_W_16);
-			_CurrentFontoffset =  (setoffset = FONT_N_SP);
-			_CurrentFontheight = (setfontheight=FONT_H_16);
+			_CurrentFontWidth = FONT_W_16;
+			_CurrentFontoffset =  FONT_N_SP;
+			_CurrentFontheight = FONT_H_16;
 		break; 
 		default: // if wrong font num passed in,  set to default
-			_CurrentFontWidth = (setfontwidth = FONT_W_FIVE);
-			_CurrentFontoffset =  (setoffset = FONT_O_EXTEND);
-			_CurrentFontheight = (setfontheight=FONT_H_8);
+			_CurrentFontWidth = FONT_W_FIVE;
+			_CurrentFontoffset =  FONT_O_EXTEND;
+			_CurrentFontheight = FONT_H_8;
 			_FontNumber = 1;
 		break;
 	}
@@ -523,14 +483,14 @@ void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg
 
 	for (i = 0; i < (_CurrentFontheight*2); i++) 
 	{
-		if (_FontNumber == UC1609Font_Bignum){
-		#ifdef UC1609_Font_Five
-			ctemp = UC_Font_Five[c - _CurrentFontoffset][i];
+		if (_FontNumber == FONT_N_BIGNUM){
+		#ifdef UC1609_Font_BigNum
+			ctemp = pFontBigNumptr[c - _CurrentFontoffset][i];
 		#endif
 		}
-		else if (_FontNumber == UC1609Font_Mednum){
-		#ifdef UC1609_Font_Six
-			ctemp = UC_Font_Six[c - _CurrentFontoffset][i];
+		else if (_FontNumber == FONT_N_MEDNUM){
+		#ifdef UC1609_Font_MedNum
+			ctemp = pFontMedNumptr[c - _CurrentFontoffset][i];
 		#endif
 		}else{ 
 			return;
@@ -565,7 +525,7 @@ void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg
 void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t bg) 
 {
 
-	if (_FontNumber < UC1609Font_Bignum)
+	if (_FontNumber < FONT_N_BIGNUM)
 	{
 		return;
 	}

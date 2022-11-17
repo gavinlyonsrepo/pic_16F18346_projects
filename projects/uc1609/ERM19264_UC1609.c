@@ -17,7 +17,7 @@
 // Param 4. height of buffer
 // Param 5. x offset of buffer
 // Param 6. y offset of buffer
-void LCDinitBuffer(MultiBuffer_t* my_buffer, uint8_t* bitmap, uint8_t w,  uint8_t h, int16_t  x, int16_t y)
+void LCDinitBuffer(MultiBuffer_t* my_buffer, uint8_t* bitmap, uint8_t w,  uint8_t h, uint8_t  x, uint8_t y)
 {
     my_buffer->screenbitmap = bitmap; // point it to the buffer
     my_buffer->width = w ;
@@ -181,14 +181,14 @@ void  LCDFillPage(uint8_t dataPattern)
 //Param3: width 0-192
 //Param4 height 0-64
 //Param5 the bitmap  the bitmap vertical addressed.
-void  LCDBitmap(int16_t x, int16_t y, uint8_t w, uint8_t h, const uint8_t* data) 
+void  LCDBitmap(int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* data) 
 {
  UC1609_CS_SetLow;
 
-  uint8_t tx, ty; 
-  uint16_t offset = 0; 
-  uint8_t column = (x < 0) ? 0 : x;
-  uint8_t page = (y < 0) ? 0 : y >>3;
+  int16_t tx, ty; 
+  int16_t offset = 0; 
+  int16_t column = (x < 0) ? 0 : x;
+  uint8_t page = (uint8_t )((y < 0) ? 0 : y >>3);
 
   for (ty = 0; ty < h; ty = ty + 8) 
   {
@@ -237,14 +237,14 @@ void  LCDclearBuffer()
 //Param3: width 0-192
 //Param4 height 0-64
 //Param5 the bitmap vertical addressed.
-void  LCDBuffer(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t* data) 
+void  LCDBuffer(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t* data) 
 {
  UC1609_CS_SetLow;
 
-  uint8_t tx, ty; 
-  uint16_t offset = 0; 
-  uint8_t column = (x < 0) ? 0 : x;
-  uint8_t page = (y < 0) ? 0 : y/8;
+  int16_t tx, ty; 
+  int16_t offset = 0; 
+  int16_t column = (x < 0) ? 0 : x;
+  uint8_t page = (uint8_t)((y < 0) ? 0 : y/8);
 
   for (ty = 0; ty < h; ty = ty + 8) 
   {
@@ -252,7 +252,7 @@ void  LCDBuffer(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t* data)
     
     send_command(UC1609_SET_COLADD_LSB, (column & 0x0F)); 
     send_command(UC1609_SET_COLADD_MSB, (column & 0XF0) >> 4); 
-    send_command(UC1609_SET_PAGEADD, page++); 
+    send_command(UC1609_SET_PAGEADD, (uint8_t)page++); 
  
     for (tx = 0; tx < w; tx++) 
     {
@@ -273,11 +273,11 @@ void  drawPixel(int16_t x, int16_t y, uint16_t colour)
     if ((x < 0) || (x >=ActiveBuffer->width) || (y < 0) || (y >= ActiveBuffer->height)) {
     return;
   }
-      uint16_t tc = (ActiveBuffer->width * (y /8)) + x; 
+      int16_t tc = (ActiveBuffer->width * (y /8)) + x; 
       switch (colour)
       {
         case FOREGROUND: 
-            temp =  (1 << (y & 7));   
+            temp =  (uint8_t)(1 << (y & 7));   
             ActiveBuffer->screenbitmap[tc] |= temp; 
             break;
         case BACKGROUND:  ActiveBuffer->screenbitmap[tc] &= ~(1 << (y & 7)); break;

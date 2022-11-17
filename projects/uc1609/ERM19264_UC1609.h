@@ -9,7 +9,6 @@
 #ifndef ERM19264_UC1609_H
 #define ERM19264_UC1609_H
 
-#include "custom_graphics_font.c"
 #include "custom_graphics.h"
 
 // Display Pixel colours   definition
@@ -29,7 +28,7 @@
 // UC1909 Write registers
 #define UC1609_SYSTEM_RESET 0xE2 
 
-#define UC1609_POWER_CONTROL 0x28 
+#define UC1609_POWER_CONTROL 0x2F 
 #define UC1609_PC_SET 0x06 // PC[2:0] 110 Internal V LCD (7x charge pump) + 10b: 1.4mA
 
 #define UC1609_ADDRESS_CONTROL 0x88 // set RAM address control
@@ -100,11 +99,11 @@ MultiBuffer_t* ActiveBuffer;
 void drawPixel(int16_t x, int16_t y, uint16_t colour);
 void LCDupdate(void);
 void LCDclearBuffer(void);
-void LCDBuffer(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t* data);
+void LCDBuffer(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t* data);
 
 void LCDbegin(uint8_t);
 void LCDinit(void);
-void LCDinitBuffer(MultiBuffer_t *p, uint8_t* bitmap, uint8_t w,  uint8_t h, int16_t  x, int16_t y); 
+void LCDinitBuffer(MultiBuffer_t *p, uint8_t* bitmap, uint8_t w,  uint8_t h, uint8_t  x, uint8_t y); 
 void LCDEnable(uint8_t on);
 void LCDFillScreen(uint8_t pixel, uint8_t mircodelay);
 void LCDFillPage(uint8_t pixels);
@@ -113,7 +112,7 @@ void invertDisplay(uint8_t on);
 void LCD_allpixelsOn(uint8_t bits);
 void LCDscroll(uint8_t bits);
 void LCDReset(void);
-void LCDBitmap(int16_t x, int16_t y, uint8_t w, uint8_t h, const uint8_t* data);
+void LCDBitmap(int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* data);
 
 void send_data(uint8_t spiDataByte);
 void send_command(uint8_t command, uint8_t value);

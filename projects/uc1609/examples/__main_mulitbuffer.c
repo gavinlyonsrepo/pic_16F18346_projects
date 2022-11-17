@@ -5,7 +5,7 @@
 * Showing multi-buffer mode the screen is divided into three equal size buffers 
 * and different data displayed in each
 * Author: Gavin Lyons.
-* Complier: xc8 v2.10 compiler
+* Complier: xc8 v2.40 compiler
 * PIC: PIC16F18346
 * IDE:  MPLAB X v6.00
 * Created Jan 2022
@@ -45,7 +45,7 @@ void main(void)
         // Test 3 write to Buffer three
         Display_Buffer_Right();
 
-        __delay_ms(5000);
+        __delay_ms(500);
     }
 } // END of main
 
@@ -59,7 +59,7 @@ void Setup(void)
     // Set up starting text mode, colour size font
     setTextColor(BACKGROUND, FOREGROUND);
     setTextSize(1);
-    setFontNum(UC1609Font_Default);
+    setFontNum(FONT_N_DEFAULT);
     custom_graphics_init( myLCDwidth, myLCDheight);
 }
 

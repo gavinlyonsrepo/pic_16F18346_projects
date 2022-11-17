@@ -1,30 +1,15 @@
 /*
 * Project Name: ERM19264_UC1609
-* File: custom_graphics_font.c
+* File: Font file
 * Description: ERM19264 LCD driven by UC1609C controller font file 
 * Author: Gavin Lyons.
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
 
-#ifndef FONTERM19264_H
-#define FONTERM19264_H
 #include "mcc_generated_files/mcc.h"
-// **********************************************
-// ****** USER FONT OPTION ONE *************
-// ****** FONT DEFINE SECTION *************** 
-// Comment in the fonts YOU want, One is default. 
+#include "ERM19264_font.h"
 
-#define UC1609_Font_One  // (1) default  (FUll ASCII with mods)
-//#define UC1609_Font_Two  // (2) thick (NO LOWERCASE)
-//#define UC1609_Font_Three // (3) seven segment 
-//#define UC1609_Font_Four // (4) wide (NO LOWERCASE)
-//#define UC1609_Font_Five // (5) big numbers (NUMBERS ONLY )
-//#define UC1609_Font_Six // (6) Medium nums (NUMBERS ONLY )
-
-// ****** END OF FONT DEFINE SECTION ******  
-// **********************************************
- 
-#ifdef UC1609_Font_One
+#ifdef UC1609_Font_Default 
 
 // ************ USER OPTION TWO**************
 // This is defined to include full extended ASCII set 127-255
@@ -34,7 +19,7 @@
 //*****************************************
 
 // Default Standard extended ASCII 5x8 font. 
-const unsigned char UC_Font_One[]  = {
+const unsigned char UC_Font_Default[]  = {
     0x00, 0x00, 0x00, 0x00, 0x00,   
 	0x3E, 0x5B, 0x4F, 0x5B, 0x3E,  // :)
 	0x3E, 0x6B, 0x4F, 0x6B, 0x3E, 
@@ -292,17 +277,19 @@ const unsigned char UC_Font_One[]  = {
 	0x00, 0x3C, 0x3C, 0x3C, 0x3C,
 	0x00, 0x00, 0x00, 0x00, 0x00
 #endif
+                 
 };
 
+const unsigned char * pFontDefaultptr = UC_Font_Default;     
 #endif //font one
 
-#ifdef UC1609_Font_Two
+#ifdef UC1609_Font_Thick
 
 // ASCII font file : "THICK" Font 7 by 8 
 // Define the ASCII table as Data array
 // cols left to right 0x00 is  off 0xFF is all on
 // NO LOWERCASE LETTERS
-const unsigned char UC_Font_Two[] = {
+const unsigned char UC_Font_Thick[] = {
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00, //  
 	0x5f,0x5f,0x00,0x00,0x00,0x00,0x00, // !
 	0x07,0x07,0x00,0x07,0x07,0x00,0x00, // "
@@ -364,14 +351,16 @@ const unsigned char UC_Font_Two[] = {
 	0x73,0x7b,0x6b,0x6b,0x6b,0x6f,0x67, // Z
 };
 
+const unsigned char * pFontThickptr = UC_Font_Thick; 
+
 #endif //font Two
 
 
-#ifdef UC1609_Font_Three
+#ifdef UC1609_Font_SevenSeg
 
 // ASCII font file : "Seven Segment" 4 by 8 
 
-const unsigned char UC_Font_Three[] = {
+const unsigned char UC_Font_SevenSeg[] = {
 	0x00,0x00,0x00,0x00, //  
 	0x00,0x00,0x36,0x00, // !
 	0x06,0x00,0x00,0x06, // "
@@ -465,14 +454,15 @@ const unsigned char UC_Font_Three[] = {
 	0x30,0x49,0x49,0x06, // z
 };
 
+const unsigned char * pFontSevenSegptr = UC_Font_SevenSeg;
 #endif //font Three
 
 
-#ifdef UC1609_Font_Four
+#ifdef UC1609_Font_Wide
 // ASCII font file : "Wide" font 8 by 8 
 // NO LOWERCASE LETTERS
 
-const  unsigned char UC_Font_Four[]  = {
+const  unsigned char UC_Font_Wide[]  = {
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, //  
 	0x00,0x00,0x00,0x5F,0x00,0x00,0x00,0x00, // !
 	0x00,0x03,0x00,0x03,0x00,0x00,0x00,0x00, // "
@@ -533,17 +523,17 @@ const  unsigned char UC_Font_Four[]  = {
 	0x00,0x07,0x08,0x08,0x78,0x08,0x08,0x07, // Y
 	0x00,0x71,0x49,0x49,0x49,0x49,0x49,0x47, // Z
 };
-
+const unsigned char * pFontWideptr = UC_Font_Wide;
 #endif //font Four
 
 
-#ifdef UC1609_Font_Five
+#ifdef UC1609_Font_BigNum
 // ASCII font file : "bignum" font 5 16 by 32 , 
 // Define the ASCII table as Data array
 // NUMBERS + ":" ONLY 
 // 32 * 16/8 = 64 ,;;, 64 * 11 = 704 bytes
 // 32 height 16 width
-const  uint8_t UC_Font_Five [11][64] = 
+const  uint8_t UC_Font_BigNum [11][64] = 
 {
 	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3F,0xFF,0xFF,0xFC,0x3F,0xFF,0xFF,0xFC,    /*"0",0*/
 	0x30,0x00,0x00,0x0C,0x30,0x00,0x00,0x0C,0x30,0x00,0x00,0x0C,0x30,0x00,0x00,0x0C,
@@ -601,15 +591,15 @@ const  uint8_t UC_Font_Five [11][64] =
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
 };  
   
-
+ const uint8_t (* pFontBigNumptr)[64] = UC_Font_BigNum;
 #endif // Font Five
 
-#ifdef UC1609_Font_Six
+#ifdef UC1609_Font_MedNum
 
 // "medNums" font 16 height 16 width 
 // Define the ASCII table as Data array
 // NUMBERS + ":" ONLY 
-const  uint8_t UC_Font_Six[11][32] = 
+const  uint8_t UC_Font_MedNum[11][32] = 
 {
 	{0x00,0x00,0x3F,0xFC,0x3F,0xFC,0x30,0x0C,0x30,0x0C,0x30,0x0C,0x30,0x0C,0x30,0x0C,
 	0x30,0x0C,0x30,0x0C,0x30,0x0C,0x30,0x0C,0x30,0x0C,0x3F,0xFC,0x3F,0xFC,0x00,0x00},/*"0",0*/
@@ -634,7 +624,6 @@ const  uint8_t UC_Font_Six[11][32] =
 	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x18,0x30,
 	0x18,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*":",10*/
 };
+ const uint8_t (* pFontMedNumptr)[32] = UC_Font_MedNum;
+
 #endif // Font Six
-
-
-#endif // font file guard header

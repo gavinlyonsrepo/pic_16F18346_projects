@@ -86,10 +86,10 @@ Files
 | ERM19264_UC1609.c |  library  source file  |
 | custom_graphics.h | graphics header file |
 | custom_graphics.c | graphics source file |
-| custom_graphics_font.c |   font  data file |
+| custom_graphics_font.x |   font  data file's |
 
 | Examples files   | Description | 
 | ------ | ------ | 
 | main.c | Shows use of fonts and graphics, with whole screen as one buffer | 
-|  main_multibuffer.c  | Shows how to divide screen into multiple buffers, this greatly reduces memory usage , The same piece of memory can be shared by the different buffers |
+|  main_multibuffer.c  | Shows how to divide screen into multiple buffers, this greatly reduces memory usage , The same piece of memory can be shared by the different buffers, this file is in example folder |
 

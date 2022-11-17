@@ -9,23 +9,37 @@
 #ifndef _CUSTOM_GRAPHICS_H
 #define _CUSTOM_GRAPHICS_H
 
-#define ERM19264_ASCII_OFFSET 0x00
-#define ERM19264_ASCII_OFFSET_SP 0x20 // Starts at Space
-#define ERM19264_ASCII_OFFSET_NUM 0x30 // Starts at number 0
-
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
 typedef enum 
 {
-    UC1609Font_Default = 1,
-    UC1609Font_Thick = 2,
-    UC1609Font_Seven_Seg = 3,
-    UC1609Font_Wide = 4,
-    UC1609Font_Bignum = 5,
-    UC1609Font_Mednum = 6,
-}UC1609FONT_e;
+    FONT_N_DEFAULT = 1,
+    FONT_N_THICK = 2,
+    FONT_N_SEVENSEG = 3,
+    FONT_N_WIDE = 4,
+    FONT_N_BIGNUM = 5,
+    FONT_N_MEDNUM = 6
+}UC1609Font_name_e;
 
-void drawPixel(int16_t x, int16_t y, uint16_t color);
+typedef enum 
+{
+    FONT_W_FIVE = 5, FONT_W_SEVEN = 7, FONT_W_FOUR = 4, FONT_W_EIGHT = 8,FONT_W_16= 16
+}UC1609Font_width_e; // width of the font in bytes cols.
+
+typedef enum 
+{
+    FONT_O_EXTEND = 0x00, 
+    FONT_O_SP = 0x20, // Starts at Space, 
+    FONT_N_SP = 0x30 // Starts at number 0
+}UC1609Font_offset_e ; // font offset in the ASCII table
+
+typedef enum 
+{
+    FONT_H_8 = 8, FONT_H_16 = 16, FONT_H_32 = 32
+}UC1609Font_height_e; // width of the font in bits
+
+
+void drawPixel(int16_t x, int16_t y, uint16_t color); // defined in the ERM192_64_UC1609
 
 void  drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
 void  drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
