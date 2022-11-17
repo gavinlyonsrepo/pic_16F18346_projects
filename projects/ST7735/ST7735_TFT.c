@@ -16,24 +16,6 @@
 #include "ST7735_TFT_Font.h"
 
 // ********* Variables  **********
-#ifdef TFT_Font_Default
-extern const char * pFontDefaultptr; // defined in ST7735_TFT_FONT.c 
-#endif
-#ifdef TFT_Font_Thick
-extern const char * pFontThickptr; // defined in ST7735_TFT_FONT.c
-#endif
-#ifdef TFT_Font_SevenSeg
-extern const char * pFontSevenptr; // defined in ST7735_TFT_FONT.c
-#endif
-#ifdef TFT_Font_Wide 
-extern const char * pFontWideptr; // defined in ST7735_TFT_FONT.c
-#endif
-#ifdef TFT_Font_Tiny
-extern const char * pFontTinyptr; // defined in ST7735_TFT_FONT.c
-#endif
-#ifdef TFT_Font_HomeSpun
-extern const char * pFontHomeptr; // defined in ST7735_TFT_FONT.c
-#endif
 
 uint8_t _TFTFontNumber = TFTFont_Default ;
 uint8_t _TFTCurrentFontWidth = 5;
@@ -56,12 +38,23 @@ uint8_t _heightStartTFT; // never change after first init
 
 // ********* Function Space *************
 
-// Desc: Write to SPI hardware SPI 
+// Desc: Write to SPI hardware or software
 // define TFT_SPI_HARDWARE toggles(see top of header file)
 // Param1:  byte to send
-void TFTspiWrite(uint8_t spidata) {
+void TFTspiWriteByte(uint8_t spidata) {
 #ifndef TFT_SPI_HARDWARE
-     uint8_t i;
+    TFTspiWriteSoftware(spidata);
+#else
+    SPI1_Open(SPI1_DEFAULT);
+    SPI1_ExchangeBlock(&spidata, sizeof (spidata));
+    SPI1_Close();
+#endif
+}
+
+// Dsec :: sends a byte using software SPI 
+// Param1:  byte to send
+void TFTspiWriteSoftware( uint8_t spidata)
+{     uint8_t i;
     for (i = 0; i < 8; i++) {
         SDATA_RA2_SetLow();
         if (spidata & 0x80)SDATA_RA2_SetHigh(); // b1000000 Mask with 0 & all zeros out.
@@ -69,11 +62,24 @@ void TFTspiWrite(uint8_t spidata) {
         spidata <<= 1;
         SCLK_RA4_SetLow();
     }
+}
+
+// Sends a buffer out on SPI
+// Param1:  pointer to buffer to send
+// Param2:  size of buffer
+void TFTspiWriteBuffer(uint8_t* spidata, size_t len) {
+	DC_RA1_SetHigh();
+    CS_RA0_SetLow();
+#ifndef TFT_SPI_HARDWARE
+		for(uint32_t i=0; i<len; i++) {
+			TFTspiWriteSoftware(spidata[i]);
+		}
 #else
     SPI1_Open(SPI1_DEFAULT);
-    SPI1_ExchangeBlock(&spidata, sizeof (spidata));
+    SPI1_ExchangeBlock(&spidata, len);
     SPI1_Close();
 #endif
+    CS_RA0_SetHigh();
 }
 
 // Desc: Write an SPI command
@@ -82,7 +88,7 @@ void TFTspiWrite(uint8_t spidata) {
 void TFTwriteCommand(uint8_t cmd_) {
     DC_RA1_SetLow();
     CS_RA0_SetLow();
-    TFTspiWrite(cmd_);
+    TFTspiWriteByte(cmd_);
     CS_RA0_SetHigh();
 }
 
@@ -92,7 +98,7 @@ void TFTwriteCommand(uint8_t cmd_) {
 void TFTwriteData(uint8_t data_) {
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
-    TFTspiWrite(data_);
+    TFTspiWriteByte(data_);
     CS_RA0_SetHigh();
 }
 
@@ -217,7 +223,6 @@ void TFTST7735BInitialize() {
 // Desc: init routine for ST7735B controller
 
 void TFTBcmd() {
-    uint8_t i=0;
     TFTwriteCommand(ST7735_SWRESET);
     __delay_ms(50);
     TFTwriteCommand(ST7735_SLPOUT);
@@ -254,12 +259,11 @@ void TFTBcmd() {
     TFTwriteData(0x11);
     TFTwriteData(0x15);
     TFTwriteCommand(ST7735_GMCTRP1);
-    static uint8_t seq6[] = {0x09, 0x16, 0x09, 0x20, 0x21, 0x1B, 0x13, 0x19, 0x17, 0x15, 0x1E, 0x2B, 0x04, 0x05, 0x02, 0x0E};
-    while (seq6[i++] != '\0' ){TFTspiWrite(seq6[i]);}
-       TFTwriteCommand(ST7735_GMCTRN1);
-    static uint8_t seq7[]= {0x0B, 0x14, 0x08, 0x1E, 0x22, 0x1D, 0x18, 0x1E, 0x1B, 0x1A, 0x24, 0x2B, 0x06, 0x06, 0x02, 0x0F}; 
-	i = 0;
-    while (seq7[i++] != '\0' ){TFTspiWrite(seq7[i]);}
+    uint8_t seq6[] = {0x09, 0x16, 0x09, 0x20, 0x21, 0x1B, 0x13, 0x19, 0x17, 0x15, 0x1E, 0x2B, 0x04, 0x05, 0x02, 0x0E};
+    TFTspiWriteBuffer(seq6, sizeof(seq6));
+    TFTwriteCommand(ST7735_GMCTRN1);
+    uint8_t seq7[]= {0x0B, 0x14, 0x08, 0x1E, 0x22, 0x1D, 0x18, 0x1E, 0x1B, 0x1A, 0x24, 0x2B, 0x06, 0x06, 0x02, 0x0F}; 
+    TFTspiWriteBuffer(seq7, sizeof(seq7));
     __delay_ms(10);
     TFTwriteCommand(ST7735_CASET);
     TFTwriteData(0x00);
@@ -282,31 +286,25 @@ void TFTBcmd() {
 
 void TFTRcmd1() {
     
+    uint8_t seq1[] = {0x01, 0x2C, 0x2D};
+	uint8_t seq2[] = {0xA2, 0x02, 0x84};
+   
     TFTwriteCommand(ST7735_SWRESET);
     __delay_ms(150);
     TFTwriteCommand(ST7735_SLPOUT);
     __delay_ms(500);
     TFTwriteCommand(ST7735_FRMCTR1);
-    TFTwriteData(0x01);
-    TFTwriteData(0x2C);
-    TFTwriteData(0x2D);
+    
+    TFTspiWriteBuffer(seq1, sizeof(seq1));
     TFTwriteCommand(ST7735_FRMCTR2);
-	TFTwriteData(0x01);
-    TFTwriteData(0x2C);
-    TFTwriteData(0x2D);
+	TFTspiWriteBuffer(seq1, sizeof(seq1));
     TFTwriteCommand(ST7735_FRMCTR3);
-    TFTwriteData(0x01);
-    TFTwriteData(0x2C);
-    TFTwriteData(0x2D);
-    TFTwriteData(0x01);
-    TFTwriteData(0x2C);
-    TFTwriteData(0x2D);
+    TFTspiWriteBuffer(seq1, sizeof(seq1));
+    TFTspiWriteBuffer(seq1, sizeof(seq1));
     TFTwriteCommand(ST7735_INVCTR);
     TFTwriteData(0x07);
     TFTwriteCommand(ST7735_PWCTR1);
-    TFTwriteData(0xA2);
-    TFTwriteData(0x02);
-    TFTwriteData(0x84);
+    TFTspiWriteBuffer(seq2, sizeof(seq2));
     TFTwriteCommand(ST7735_PWCTR2);
     TFTwriteData(0xC5);
     TFTwriteCommand(ST7735_PWCTR3);
@@ -330,29 +328,23 @@ void TFTRcmd1() {
 // Desc: init sub-routine
 
 void TFTRcmd2red() {
+    uint8_t seq1[] = {0x00, 0x00, 0x00, 0x7F};
+	uint8_t seq2[] = {0x00, 0x00, 0x00, 0x9F};
     TFTwriteCommand(ST7735_CASET);
-    TFTwriteData(0x00);
-    TFTwriteData(0x00);
-    TFTwriteData(0x00);
-    TFTwriteData(0x7F);
+    TFTspiWriteBuffer(seq1, sizeof(seq1));
     TFTwriteCommand(ST7735_RASET);
-    TFTwriteData(0x00);
-    TFTwriteData(0x00);
-    TFTwriteData(0x00);
-    TFTwriteData(0x9F);
+    TFTspiWriteBuffer(seq2, sizeof(seq2));
 }
 
 // Desc: init sub-routine
 
 void TFTRcmd3() {
-    uint8_t i = 0;
+    uint8_t seq1[] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10};
+    uint8_t seq2[] = {0x03, 0x1D, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10};
     TFTwriteCommand(ST7735_GMCTRP1);
-    static uint8_t seq4[] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10}; 
-	while (seq4[i++] != '\0' ){TFTspiWrite(seq4[i]);}
+    TFTspiWriteBuffer(seq1, sizeof(seq1));
     TFTwriteCommand(ST7735_GMCTRN1);
-    static uint8_t seq5[] = {0x03, 0x1D, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10}; 
-	i = 0;
-    while (seq5[i++] != '\0') {TFTspiWrite(seq5[i]);}
+    TFTspiWriteBuffer(seq2, sizeof(seq2));
     TFTwriteCommand(ST7735_NORON);
     __delay_ms(10);
     TFTwriteCommand(ST7735_DISPON);
@@ -412,12 +404,12 @@ void TFTfillRectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color
     CS_RA0_SetLow();
     for (y = h; y > 0; y--) {
         for (x = w; x > 0; x--) {
-            TFTspiWrite(hi);
-            TFTspiWrite(lo);
+            TFTspiWriteByte(hi);
+            TFTspiWriteByte(lo);
         }
     }
     CS_RA0_SetHigh();
-
+    
 }
 
 // Desc: Fills the whole screen with a given color.
@@ -440,8 +432,8 @@ void TFTdrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
     while (h--) {
-        TFTspiWrite(hi);
-        TFTspiWrite(lo);
+        TFTspiWriteByte(hi);
+        TFTspiWriteByte(lo);
     }
     CS_RA0_SetHigh();
 }
@@ -460,8 +452,8 @@ void TFTdrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
     while (w--) {
-        TFTspiWrite(hi);
-        TFTspiWrite(lo);
+        TFTspiWriteByte(hi);
+        TFTspiWriteByte(lo);
     }
     CS_RA0_SetHigh();
 }
@@ -913,8 +905,8 @@ void TFTpushColor(uint16_t color) {
     lo = color & 0xFF;
     DC_RA1_SetHigh();
     CS_RA0_SetLow();
-    TFTspiWrite(hi);
-    TFTspiWrite(lo);
+    TFTspiWriteByte(hi);
+    TFTspiWriteByte(lo);
     CS_RA0_SetHigh();
 }
 
@@ -1084,6 +1076,5 @@ void TFTInitPCBType(ST7735_PCBtype_e pcbType)
 		case TFT_ST7735B : TFTST7735BInitialize(); break;
 	}
 }
-
 
 //**************** EOF *****************

@@ -15,6 +15,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "ST7735_TFT.h"
 
+
 // *********** Defines **************
 #define TEST_DELAY1 1000
 #define TEST_DELAY2 2000
@@ -38,7 +39,6 @@ void Test9(void); // Rotate
 void Test10(void); // change modes test 
 void Test11(void); // custom char/icon  byte tall
 void Test12(void); // two color bitmap full screen
-
 void EndTest(void);
 
 // ************  Main application ***************
@@ -327,7 +327,7 @@ void Test12(void)
 {
 // 'backupicon', 128x128px , icon from https://github.com/gavinlyonsrepo/backupmenu
 // 128 * (128/8) = 2048 // fullscreen bitmap bi-colour
-const unsigned char mybitmap[2048] = {
+const uint8_t mybitmap[2048] = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -462,5 +462,4 @@ TFTdrawBitmap(0, 0, 128 , 128, ST7735_WHITE , ST7735_GREEN, mybitmap);
 
  __delay_ms(TEST_DELAY5);
 }
-
 // *************** EOF ****************

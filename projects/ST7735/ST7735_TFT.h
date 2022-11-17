@@ -108,7 +108,7 @@
 #define   ST7735_GREY    0x9CD1
 #define   ST7735_BROWN   0x6201
 #define   ST7735_PINK    0xF812
-#define   ST7735_ORANGE  0xFC00
+#define   ST7735_ORANGE  0xF100
 
 #define _swap_TFT(a, b) { int16_t t; t = a; a = b; b = t;}
 
@@ -155,18 +155,14 @@ typedef enum
 	TFTFont_width_16= 16
 }ST7735_Font_width_e; // width of the font in bytes, cols.
 
-ST7735_modes_e     ST7735_modes;
-ST7735_rotate_e    ST7735_rotate;
-ST7735_PCBtype_e   ST7735_PCBtype;
-ST7735_FontType_e  ST7735_FontType;
-
 // ******** FUNCTION  PROTOTYPES ************ 
 
 // SPI 
 void TFTwriteCommand(uint8_t);
 void TFTwriteData(uint8_t);
-void TFTspiWrite(uint8_t);
-
+void TFTspiWriteByte(uint8_t);
+void TFTspiWriteSoftware(uint8_t spidata);
+void TFTspiWriteBuffer(uint8_t* spidata, size_t len);
 
 // Init routines 
 void TFTInitPCBType(ST7735_PCBtype_e);
@@ -226,6 +222,7 @@ void TFTFontNum(ST7735_FontType_e FontNumber);
 // Bitmap & Icon
 void TFTdrawIcon(uint8_t x, uint8_t y, uint8_t w, uint16_t color, uint16_t bgcolor, const unsigned char character[]);
 void TFTdrawBitmap(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color, uint16_t bgcolor, const unsigned char bitmap[]);
+
 
 #endif // file header guard 
 
