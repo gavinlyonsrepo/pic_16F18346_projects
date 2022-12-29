@@ -17,7 +17,7 @@
 
 // ***************** USER OPTION *****************
 // For testing fonts 2-6: Comment in this define & defines FONT DEFINE SECTION of font file. 
-//#define TestFontsOn
+#define TestFontsOn
 //***********************************************
 
 #define LCDcontrast 0x49 //Constrast 00 to FF , 0x49 is default.
@@ -27,23 +27,15 @@
 // create a full screen buffer (192 * 64/8) + 1 
 uint8_t screenBuffer[myLCDwidth * (myLCDheight / 8)];
 
-// 'small image', 20x20px bitmap bi-colour vertically addressed
-const uint8_t smallImage[60] = {
-    0xff, 0x3f, 0x0f, 0x07, 0x03, 0x13, 0x33, 0x39, 0x39, 0x79, 0xf9, 0xf9,
-    0xfb, 0xf3, 0xf7, 0xe3, 0x87, 0x0f, 0x1f, 0xff, 0xf9, 0xc0, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0f, 0x1d, 0x19, 0x10, 0x19,
-    0x0f, 0x00, 0xc0, 0xf0, 0x0f, 0x0f, 0x0f, 0x0e, 0x0c, 0x0c, 0x08, 0x08,
-    0x08, 0x00, 0x00, 0x08, 0x08, 0x08, 0x0c, 0x0c, 0x0e, 0x0f, 0x0f, 0x0f
-};
+// Mobile icon  16x8px Vertical addressed
+const  uint8_t  SignalIconVa[16] = {
+      0x03, 0x05, 0x09, 0xff, 0x09, 0x05, 0xf3, 0x00, 0xf8, 0x00, 0xfc, 0x00, 0xfe, 0x00, 0xff, 0x00
+  };
 
-// 'small image', 20x20px bitmap bi-colour horizontally addressed
-const uint8_t smallImageHa[60] = {
-    0xff, 0xff, 0xf0, 0xfe, 0x0f, 0xf0, 0xf0, 0x02, 0xf0, 0xe1, 0xf8, 0x70,
-    0xc7, 0xfe, 0x30, 0xc3, 0xff, 0x10, 0x80, 0x7f, 0x10, 0x80, 0x3f, 0x90,
-    0x80, 0x3d, 0x80, 0x00, 0x30, 0x80, 0x00, 0x18, 0x80, 0x80, 0x1d, 0x80,
-    0x80, 0x0f, 0x10, 0x80, 0x00, 0x10, 0xc0, 0x00, 0x30, 0xc0, 0x00, 0x30,
-    0xe0, 0x00, 0x70, 0xf0, 0x00, 0xf0, 0xfc, 0x03, 0xf0, 0xff, 0x9f, 0xf0
-};
+// Mobile icon  16x8px horizontal addressed 
+const uint8_t  SignalIconHa[16] = {
+      0xfe, 0x02, 0x92, 0x0a, 0x54, 0x2a, 0x38, 0xaa, 0x12, 0xaa, 0x12, 0xaa, 0x12, 0xaa, 0x12, 0xaa
+  };
 
 void Setup(void);
 void Test_1_3(void);
@@ -74,7 +66,7 @@ void Setup(void) {
     // Set up starting text mode, colour size font 
     setTextColor(BACKGROUND, FOREGROUND);
     setTextSize(1);
-    setFontNum(FONT_N_DEFAULT);
+    setFontNum(UC1609Font_Default);
     //init the graphics          
     custom_graphics_init(myLCDwidth, myLCDheight);
 
@@ -88,18 +80,18 @@ void Test_1_3(void) {
     // Assign address of struct to be the active buffer pointer 
     ActiveBuffer = &mybuffer;
     
-    // Test 1a:  bitmap image written directly to screen (20X20 pixels) vertically addressed
-    LCDBitmap(50, 10, 20, 20, (uint8_t*) smallImage);
-    __delay_ms(5000);
+    // Test 1a:  bitmap image written directly to screen ,vertically addressed
+    LCDBitmap(50, 10, 16, 8, (uint8_t*) SignalIconVa);
+    __delay_ms(3000);
     LCDFillScreen(0x00, 0); // Clear the screen
-    // Test 1b:  bitmap image written to the buffer (20X20 pixels) horizontally addressed
-    drawBitmapBuffer(100, 10, 20, 20, BACKGROUND, FOREGROUND, (uint8_t*) smallImageHa);
+    // Test 1b:  bitmap image written to the buffer ,horizontally addressed
+    drawBitmapBuffer(100, 10, 16, 8, BACKGROUND, FOREGROUND, (uint8_t*) SignalIconHa);
     LCDupdate();
-    __delay_ms(5000);
+    __delay_ms(3000);
 
 
     // Test 2: text
-    setFontNum(FONT_N_DEFAULT);
+    setFontNum(UC1609Font_Default);
     drawChar(150, 30, '1', BACKGROUND, FOREGROUND, 2);
     drawText(10, 10, "hello world ", FOREGROUND, BACKGROUND, 1);
 
@@ -140,7 +132,7 @@ void Test_4_11(void) {
     // Assign address of struct to be the active buffer pointer 
     ActiveBuffer = &mybuffer;
     
-    setFontNum(FONT_N_DEFAULT);
+    setFontNum(UC1609Font_Default );
     // TEST 4
     drawText(0, 0, "HelloWorld", FOREGROUND, BACKGROUND, 3);
 
@@ -174,19 +166,23 @@ void Test_4_11(void) {
     LCDclearBuffer(); // Clear the buffer
 
     // Test 9 :: font 2 3 4
-    setFontNum(FONT_N_THICK); // Thick 
-    drawText(0, 0, "HELLO WORLD 123", FOREGROUND, BACKGROUND, 1);
-    setFontNum(FONT_N_SEVENSEG); //seven segment
-    drawText(0, 20, "HELLO WORLD 456 ", FOREGROUND, BACKGROUND, 1);
-    setFontNum(FONT_N_WIDE); // wide 
-    drawText(0, 40, "HELLO WORLD 789", FOREGROUND, BACKGROUND, 1);
-
+    setFontNum(UC1609Font_Thick); // Thick 
+    drawText(0, 0, "THICK 123", FOREGROUND, BACKGROUND, 1);
+    setFontNum(UC1609Font_Seven_Seg); //seven segment
+    drawText(0, 10, "seven seg 456 ", FOREGROUND, BACKGROUND, 1);
+    setFontNum(UC1609Font_Wide); // wide 
+    drawText(0, 20, "WIDE 789", FOREGROUND, BACKGROUND, 1);
+    setFontNum(UC1609Font_Tiny); // wide 
+    drawText(0, 30, "tiny font 287", FOREGROUND, BACKGROUND, 1);
+    setFontNum(UC1609Font_Homespun); // wide 
+    drawText(0, 40, "HomeSpun 29", FOREGROUND, BACKGROUND, 1);
     LCDupdate();
+    __delay_ms(5000);
     __delay_ms(5000);
     LCDclearBuffer(); // Clear the buffer
 
     // Test 10 :: font 5
-    setFontNum(FONT_N_BIGNUM);
+    setFontNum(UC1609Font_Bignum);
     drawTextNumFont(0, 32, "12345", BACKGROUND, FOREGROUND);
     drawCharNumFont(0, 0, '5', FOREGROUND, BACKGROUND);
     drawCharNumFont(160, 0, '5', BACKGROUND, FOREGROUND);
@@ -196,7 +192,7 @@ void Test_4_11(void) {
     LCDclearBuffer(); // Clear the buffer
 
     // Test 11 :: font 6
-    setFontNum(FONT_N_MEDNUM);
+    setFontNum(UC1609Font_Mednum);
     drawTextNumFont(0, 32, "123456", BACKGROUND, FOREGROUND);
     drawCharNumFont(0, 0, '6', FOREGROUND, BACKGROUND);
     drawCharNumFont(160, 0, '6', BACKGROUND, FOREGROUND);
@@ -204,5 +200,6 @@ void Test_4_11(void) {
 
     __delay_ms(5000);
     LCDclearBuffer(); // Clear the buffer
+    
 }
 // ************* EOF **************

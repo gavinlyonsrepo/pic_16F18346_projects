@@ -1,16 +1,13 @@
 
 /*
 * Project Name: ERM19264_UC1609
-* File:custom_graphics.c
-* Description: ERM19264 LCD driven by UC1609C controller header file for the custom graphics functions
-* Author: Gavin Lyons.
+* File: ERM19264_graphics.c
 * URL: https://github.com/gavinlyonsrepo/pic_16F18346_projects
 */
 
-#include <string.h>
-#include "mcc_generated_files/mcc.h"
-#include "custom_graphics.h"
-#include "ERM19264_font.h"
+
+#include "ERM19264_graphics.h"
+
 
 int16_t height(void);
 int16_t width(void);
@@ -26,7 +23,7 @@ uint8_t textsize;
 
 bool wrap; // If set, 'wrap' text at right edge of display
 
-uint8_t _FontNumber = FONT_N_DEFAULT;
+uint8_t _FontNumber = 1;
 uint8_t _CurrentFontWidth = 5;
 uint8_t _CurrentFontoffset = 0;
 uint8_t _CurrentFontheight = 8;
@@ -330,7 +327,9 @@ void drawChar(int16_t x, int16_t y, unsigned char c,
 		 ((x + (_CurrentFontWidth+1) * size - 1) < 0) || // Clip left
 		 ((y + _CurrentFontheight * size - 1) < 0))   // Clip top
 		return;
-
+    if (_FontNumber >= UC1609Font_Bignum)
+        return;
+    
 	for (uint8_t i=0; i<(_CurrentFontWidth+1); i++ ) {
 		uint8_t line;
 		if (i == _CurrentFontWidth)
@@ -340,18 +339,24 @@ void drawChar(int16_t x, int16_t y, unsigned char c,
 		else 
 		{
 			 switch (_FontNumber) {
-#ifdef UC1609_Font_Default
-				case FONT_N_DEFAULT : line = pFontDefaultptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Default_enabled
+				case UC1609Font_Default : line = pFontDefaultptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif 
-#ifdef UC1609_Font_Thick
-				case FONT_N_THICK: line = pFontThickptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Thick_enabled
+				case UC1609Font_Thick : line = pFontThickptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
-#ifdef UC1609_Font_SevenSeg
-				case FONT_N_SEVENSEG : line = pFontSevenSegptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_SevenSeg_enabled
+				case UC1609Font_Seven_Seg : line = pFontSevenSegptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
-#ifdef UC1609_Font_Wide
-				case  FONT_N_WIDE: line = pFontWideptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#ifdef UC1609_Font_Wide_enabled
+				case  UC1609Font_Wide : line = pFontWideptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
 #endif
+#ifdef UC1609_Font_Tiny_enabled
+				case UC1609Font_Tiny: line = pFontTinyptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif
+#ifdef UC1609_Font_Homespun_enabled
+				case UC1609Font_Homespun: line = pFontHomeSpunptr[((c - _CurrentFontoffset) * _CurrentFontWidth) + i]; break;
+#endif               
 				default: // wrong font number
 						return;
 				break;
@@ -403,67 +408,84 @@ int16_t height(void){
   return _height;
 }
 
-void drawText(uint8_t x, uint8_t y, char *_text, uint16_t color, uint16_t bg, uint8_t size){
-  uint8_t cursor_x, cursor_y;
-  uint16_t textsize, i;
-  cursor_x = x, cursor_y = y;
-  textsize = strlen(_text);
-  for(i = 0; i < textsize; i++){
-    if(wrap && ((cursor_x + size * _CurrentFontWidth) > _width)){
-      cursor_x = 0;
-      cursor_y = cursor_y + size * 7 + 3 ;
-      if(cursor_y > _height) cursor_y = _height;
-      if(_text[i] == 0) goto _skip; }
-    drawChar(cursor_x, cursor_y, _text[i], color, bg, size);
-    cursor_x = cursor_x + size * (_CurrentFontWidth + 1);
-    if(cursor_x > _width) cursor_x = _width;
-    _skip:;}
+// Font 1-6 only
+void drawText(uint8_t x, uint8_t y, char *pText, uint16_t color, uint16_t bg, uint8_t size){
+	if (_FontNumber >= UC1609Font_Bignum)
+        return;
+    
+	uint8_t cursor_x, cursor_y;
+	cursor_x = x, cursor_y = y;
+	
+	while (*pText != '\0') 
+	{
+		if (wrap && ((cursor_x + size * _CurrentFontWidth) > _width)) 
+		{
+			cursor_x = 0;
+			cursor_y = cursor_y + size * 7 + 3;
+			if (cursor_y > _height) cursor_y = _height;
+		}
+		drawChar(cursor_x, cursor_y, *pText, color, bg, size);
+		cursor_x = cursor_x + size * (_CurrentFontWidth + 1);
+		if (cursor_x > _width) cursor_x = _width;
+		pText++;
+	}
 }
 
 // Desc :  Set the font number
-// Param1: fontnumber 1-6
-// 1=default 2=thick 3=seven segment 4=wide 5=bignums 6 = mednums
+// Param1: fontnumber enum LCD_FONT_TYPE_e , 1-8.
+// 1=default 2=thick 3=seven segment 4=wide 5=tiny 6=homespun 7=bignums 8=mednums 
 
-void setFontNum(uint8_t FontNumber) 
+void setFontNum(LCDFontName_e FontNumber) 
 {
 	_FontNumber = FontNumber;
-	
-	switch (_FontNumber) {
-		case 1:  // Norm default 5 by 8
-			_CurrentFontWidth = FONT_W_FIVE;
-			_CurrentFontoffset = FONT_O_EXTEND;
-			_CurrentFontheight = FONT_H_8;
+		
+	switch (_FontNumber) 
+	{
+		case UC1609Font_Default:  // Norm default 5 by 8
+			_CurrentFontWidth = UC1609FontWidth_5;
+			_CurrentFontoffset =  UC1609FontOffset_Extend;
+			_CurrentFontheight = UC1609FontHeight_8;
 		break; 
-		case 2: // Thick 7 by 8 (NO LOWERCASE LETTERS)
-			_CurrentFontWidth = FONT_W_SEVEN;
-			_CurrentFontoffset =  FONT_O_SP;
-			_CurrentFontheight = FONT_H_8;
+		case UC1609Font_Thick: // Thick 7 by 8 (NO LOWERCASE LETTERS)
+			_CurrentFontWidth = UC1609FontWidth_7;
+			_CurrentFontoffset = UC1609FontOffset_Space;
+			_CurrentFontheight = UC1609FontHeight_8;
 		break; 
-		case 3:  // Seven segment 4 by 8
-			_CurrentFontWidth = FONT_W_FOUR;
-			_CurrentFontoffset =   FONT_O_SP;
-			_CurrentFontheight = FONT_H_8;
+		case UC1609Font_Seven_Seg:  // Seven segment 4 by 8
+			_CurrentFontWidth = UC1609FontWidth_4;
+			_CurrentFontoffset = UC1609FontOffset_Space;
+			_CurrentFontheight = UC1609FontHeight_8;
 		break;
-		case 4: // Wide  8 by 8 (NO LOWERCASE LETTERS)
-			_CurrentFontWidth = FONT_W_EIGHT;
-			_CurrentFontoffset =  FONT_O_SP;
-			_CurrentFontheight = FONT_H_8;
+		case UC1609Font_Wide : // Wide  8 by 8 (NO LOWERCASE LETTERS)
+			_CurrentFontWidth = UC1609FontWidth_8;
+			_CurrentFontoffset = UC1609FontOffset_Space;
+			_CurrentFontheight = UC1609FontHeight_8;
 		break; 
-		case 5: // big nums 16 by 32 (NUMBERS + : only)
-			_CurrentFontWidth = FONT_W_16;
-			_CurrentFontoffset = FONT_N_SP;
-			_CurrentFontheight = FONT_H_32;
+		case UC1609Font_Tiny:  // tiny 3 by 8
+			_CurrentFontWidth = UC1609FontWidth_3;
+			_CurrentFontoffset =  UC1609FontOffset_Space;
+			_CurrentFontheight = UC1609FontHeight_8;
+		break;
+		case UC1609Font_Homespun: // homespun 7 by 8 
+			_CurrentFontWidth = UC1609FontWidth_7;
+			_CurrentFontoffset = UC1609FontOffset_Space;
+			_CurrentFontheight = UC1609FontHeight_8;
+		break;
+		case UC1609Font_Bignum : // big nums 16 by 32 (NUMBERS + : only)
+			_CurrentFontWidth = UC1609FontWidth_16;
+			_CurrentFontoffset = UC1609FontOffset_Number;
+			_CurrentFontheight = UC1609FontHeight_32;
 		break; 
-		case 6: // med nums 16 by 16 (NUMBERS + : only)
-			_CurrentFontWidth = FONT_W_16;
-			_CurrentFontoffset =  FONT_N_SP;
-			_CurrentFontheight = FONT_H_16;
-		break; 
+		case UC1609Font_Mednum: // med nums 16 by 16 (NUMBERS + : only)
+			_CurrentFontWidth = UC1609FontWidth_16;
+			_CurrentFontoffset =  UC1609FontOffset_Number;
+			_CurrentFontheight = UC1609FontHeight_16;
+		break;
 		default: // if wrong font num passed in,  set to default
-			_CurrentFontWidth = FONT_W_FIVE;
-			_CurrentFontoffset =  FONT_O_EXTEND;
-			_CurrentFontheight = FONT_H_8;
-			_FontNumber = 1;
+			_CurrentFontWidth = UC1609FontWidth_5;
+			_CurrentFontoffset =  UC1609FontOffset_Extend;
+			_CurrentFontheight = UC1609FontHeight_8;
+			_FontNumber = UC1609Font_Default;
 		break;
 	}
 	
@@ -474,22 +496,24 @@ void setFontNum(uint8_t FontNumber)
 // Param 3: The ASCII character
 // Param 4: color 
 // Param 5: background color
-// Notes for font 5 & font 6 (bignums  + mednums)  only
+// Notes for font 7 & font 8 (bignums  + mednums)  only
 void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg) 
 {
-
+    if (_FontNumber < UC1609Font_Bignum) 
+		return;
+    
 	uint8_t i, j;
 	uint8_t ctemp = 0, y0 = y; 
 
 	for (i = 0; i < (_CurrentFontheight*2); i++) 
 	{
-		if (_FontNumber == FONT_N_BIGNUM){
-		#ifdef UC1609_Font_BigNum
+		if (_FontNumber == UC1609Font_Bignum){
+		#ifdef UC1609_Font_BigNum_enabled 
 			ctemp = pFontBigNumptr[c - _CurrentFontoffset][i];
 		#endif
 		}
-		else if (_FontNumber == FONT_N_MEDNUM){
-		#ifdef UC1609_Font_MedNum
+		else if (_FontNumber == UC1609Font_Mednum){
+		#ifdef UC1609_Font_MedNum_enabled
 			ctemp = pFontMedNumptr[c - _CurrentFontoffset][i];
 		#endif
 		}else{ 
@@ -521,14 +545,11 @@ void drawCharNumFont(uint8_t x, uint8_t y, uint8_t c, uint8_t color , uint8_t bg
 // Param 3: pointer to string 
 // Param 4: color 
 // Param 5: background color
-// Notes for font 5 & font 6 (bignums  + mednums)  only
+// Notes for font 7 & font 8 (bignums  + mednums)  only
 void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t bg) 
 {
-
-	if (_FontNumber < FONT_N_BIGNUM)
-	{
+	if (_FontNumber < UC1609Font_Bignum) 
 		return;
-	}
 
 	while (*pText != '\0') 
 	{
@@ -557,7 +578,7 @@ void drawTextNumFont(uint8_t x, uint8_t y, char *pText, uint8_t color, uint8_t b
 void drawBitmapBuffer(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t color, uint8_t bgcolor, const unsigned char bitmap[]) {
 	int16_t byteWidth = (w + 7) / 8;
 	uint8_t byte = 0;
-	for (int16_t j = 0; j < h; j++, y++) 
+    for (int16_t j = 0; j < h; j++, y++) 
 	{
 		for (int16_t i = 0; i < w; i++) 
 		{

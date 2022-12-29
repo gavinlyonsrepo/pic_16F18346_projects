@@ -16,7 +16,7 @@ Overview
 * Title : Library for ERM19264-5 v3 LCD  (UC1609C controller) 
 * Description : 
 
-1. PIC library written in C, Xc8 compiler.      
+1. PIC library written in C, Xc8 compiler. 
 2. Inverse, rotate and contrast control. 
 3. ASCII text strings and character text display.
 4. Graphics library included
@@ -24,7 +24,7 @@ Overview
 6. Multi Buffer Mode
 7. Custom bitmaps supported.
 8. Hardware SPI.
-9. 6 fonts, Size adjustable.
+9. 8 fonts, Size adjustable.
 10. Light weight version available in projects folder  "uc1609_text".
 
 Arduino Library
@@ -51,7 +51,7 @@ Output Screenshots, From left to right , top to bottom.
 2. Multi buffer mode screen divided into two buffers 
 3. Different size and type of fonts 
 4. Available font printed out (this can be expanded by mod )
-5. Fonts 5-6
+5. Fonts 7-8
 6. Fonts 1-4
 
 ![op](https://github.com/gavinlyonsrepo/ERM19264_UC1609/blob/main/extras/image/output.jpg)
@@ -84,12 +84,13 @@ Files
 | ------ | ------ |
 | ERM19264_UC1609.h | library header file  |
 | ERM19264_UC1609.c |  library  source file  |
-| custom_graphics.h | graphics header file |
-| custom_graphics.c | graphics source file |
-| custom_graphics_font.x |   font  data file's |
+| ERM19264_graphics.h | graphics header file |
+| ERM19264_graphics.c | graphics source file |
+| ERM19264_font.h | font header file |
+| ERM19264_font.c | font  data file's |
 
 | Examples files   | Description | 
 | ------ | ------ | 
 | main.c | Shows use of fonts and graphics, with whole screen as one buffer | 
-|  main_multibuffer.c  | Shows how to divide screen into multiple buffers, this greatly reduces memory usage , The same piece of memory can be shared by the different buffers, this file is in example folder |
+|  main_multibuffer.c  | Shows how to divide screen into 3 sectors, this greatly reduces memory usage , The same piece of memory can be shared by the one buffer, this file is in example folder |
 

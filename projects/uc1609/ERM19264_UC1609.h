@@ -9,7 +9,7 @@
 #ifndef ERM19264_UC1609_H
 #define ERM19264_UC1609_H
 
-#include "custom_graphics.h"
+#include "ERM19264_graphics.h"
 
 // Display Pixel colours   definition
 // (1): white on blue,  FG = white BG = blue
@@ -28,7 +28,7 @@
 // UC1909 Write registers
 #define UC1609_SYSTEM_RESET 0xE2 
 
-#define UC1609_POWER_CONTROL 0x2F 
+#define UC1609_POWER_CONTROL 0x28 
 #define UC1609_PC_SET 0x06 // PC[2:0] 110 Internal V LCD (7x charge pump) + 10b: 1.4mA
 
 #define UC1609_ADDRESS_CONTROL 0x88 // set RAM address control
@@ -67,10 +67,6 @@
 #define UC1609_RESET_DELAY2   0 // mS delay datasheet says 5mS, does not work
 #define UC1609_INIT_DELAY 100   //  mS delay ,after init 
 #define UC1609_INIT_DELAY2 3 // mS delay,  before reset called
-
-// No buffer mode font
-#define UC_NB_FONTPADDING  send_data(0x00)
-#define UC_NB_FONTWIDTH 5
 
 // GPIO
 #define UC1609_CS_SetHigh CS_RA0_SetHigh() 
