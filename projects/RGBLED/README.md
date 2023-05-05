@@ -16,11 +16,10 @@ Overview
 * PIC: PIC16F18346
 * IDE:  MPLAB X v6.00
 
-
 Hardware
 ------------------------
 
-Schematic, Add more RGB and LED and resistors as necessary. Vcc = 5V.
+Schematic, Add more RGB LED's and resistors as necessary. Vcc = 5V.
 
 ![ schematic ](https://github.com/gavinlyonsrepo/pic_16F18346_projects/blob/master/images/rgbled/rgbled.png)
 
@@ -28,5 +27,5 @@ Schematic, Add more RGB and LED and resistors as necessary. Vcc = 5V.
 Software
 ---------------------------------
 
-Timer0 is used to debounce  push button. Which changes form timed mode to the steady on modes. Timer1 is used for a delay at which to  change LED transition in timed mode, 
-The transition duration is set by the potentiometer. 
+Timer0 is used to debounce  S1 push button. Which changes from "timed mode" to the "steady modes". Timer1 is used for a delay at which to  change LED transition in timed mode, 
+The transition duration is set by the R2 potentiometer value.
