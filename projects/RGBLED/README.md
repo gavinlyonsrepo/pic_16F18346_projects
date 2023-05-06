@@ -23,13 +23,13 @@ Schematic, Add more RGB LED's and resistors as necessary. Vcc = 5V.
 
 Current Consumption 8 X RGB LED's at 5V
 
-l Led color  | current |
+| Led color  | current |
 | ---- | ---- |
 | Blue | 32mA |
-| Green  32mA |
+| Green | 32mA |
 | Red | 32mA |
 | Yellow | 60mA |
-| Magneta 60mA |
+| Magneta | 60mA |
 | Cyan | 60mA |
 | White | 84mA |
 
