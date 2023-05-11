@@ -16,7 +16,7 @@
 #include "Push_button.h"
 
 #include "mcc_generated_files/mcc.h"
-#include <time.h> // to seed srand
+
 
 //delays
 #define SETUP_DELAY 1000 //mS delay used in setup during LED test.
@@ -41,10 +41,6 @@ void main(void)
     Setup();
     uint8_t runMode = 0;  // 0 = timer mode 1-8 = steady modes
     
-    // Seed random generator 
-    time_t toc;
-    time(&toc);
-    srand((uint16_t) toc);
     
     while (1)
     {
