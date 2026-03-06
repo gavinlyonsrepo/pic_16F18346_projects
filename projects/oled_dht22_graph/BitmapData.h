@@ -1,4 +1,4 @@
-//  SW used to make bitamps https://javl.github.io/image2cpp/
+//  SW used to make bitamps https://github.com/gavinlyonsrepo/Guardian_LTSM
 //  File to hold bitmap data 
 
 
@@ -6,7 +6,6 @@
 #define _bitmap_test_H
 
 // 'myimage', 128x64px 
-//SW used to make https://javl.github.io/image2cpp/
 // Vertical addressed data
 const uint8_t myimage[] = { 
 

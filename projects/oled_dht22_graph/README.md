@@ -10,6 +10,7 @@ Overview
 * PIC: PIC16F18346
 * IDE:  MPLAB X v5.30
 * Other versions: Text only OLED library version here at this github repository.
+* [Bitmap data creation tool](https://github.com/gavinlyonsrepo/Guardian_LTSM)
 
 Features
 ----------------------
@@ -40,6 +41,7 @@ The library can  display Graphics, text and bitmaps.
 
  Will also work on a  OLED (128 by 32) & (96 by 16) SSD1306, as well with one modification to library.
 ( comment in/out a define at top of header file.). 
+https://github.com/gavinlyonsrepo/Guardian_LTSM
 
 Fonts. 
 
@@ -47,7 +49,9 @@ Fonts.
 2. UNO font X by Y = 6 by 8 . 147 characters.
 3. MEGA font X by Y  = 16 by 16 . 32 characters
 
-More fonts can be found here at  [link](http://www.rinkydinkelectronics.com/r_fonts.php),as  well as instructions on how to create them.
+More fonts can be found here at  [link](http://www.rinkydinkelectronics.com/r_fonts.php)
+
+[Font creation tool](https://github.com/gavinlyonsrepo/Colossus_LTSM)
 
 **DHT 22 sensor**
 
